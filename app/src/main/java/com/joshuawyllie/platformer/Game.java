@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.joshuawyllie.platformer.level.TestLevel;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -26,6 +28,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private Canvas _canvas;
 
     private ArrayList<Entity> _entities = new ArrayList<>();
+    private TestLevel testLevel = new TestLevel();
 
     public Game(Context context) {
         super(context);
