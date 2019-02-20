@@ -1,7 +1,9 @@
-package com.joshuawyllie.platformer;
+package com.joshuawyllie.platformer.entity;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
+import com.joshuawyllie.platformer.Game;
 
 public abstract class Entity {
 
@@ -14,52 +16,52 @@ public abstract class Entity {
     float _velX = 0;
     float _velY = 0;
 
-    void update() {
+    public void update() {
         _x += _velX;
         _y += _velY;
     }
-    void render(final Canvas canvas, final Paint paint) {}
-    void onCollision(final Entity that) {}
-    void destroy() {}
-    void respawn() {}
+    public void render(final Canvas canvas, final Paint paint) {}
+    public void onCollision(final Entity that) {}
+    public void destroy() {}
+    public void respawn() {}
 
-    float left() {
+    public float left() {
         return _x;
     }
-    float right() {
+    public float right() {
         return _x + _width;
     }
-    float top() {
+    public float top() {
         return _y;
     }
-    float bottom() {
+    public float bottom() {
         return _y + _height;
     }
-    float centerX() {
+    public float centerX() {
         return _x + (_width * 0.5f);
     }
-    float centerY() {
+    public float centerY() {
         return _y + (_height * 0.5f);
     }
 
-    void setLeft(final float leftEdgePosition) {
+    public void setLeft(final float leftEdgePosition) {
         _x = leftEdgePosition;
     }
-    void setRight(final float rightEdgePosition) {
+    public void setRight(final float rightEdgePosition) {
         _x = rightEdgePosition - _width;
     }
-    void setTop(final float topEdgePosition) {
+    public void setTop(final float topEdgePosition) {
         _y = topEdgePosition;
     }
-    void setBottom(final float bottomEdgePosition) {
+    public void setBottom(final float bottomEdgePosition) {
         _y = bottomEdgePosition - _height;
     }
-    void setCenter(final float x, final float y) {
+    public void setCenter(final float x, final float y) {
         _x = x - (_width * 0.5f);
         _y = y - (_height * 0.5f);
     }
 
-    boolean isColliding(final Entity that) {
+    public boolean isColliding(final Entity that) {
         if (this == that) {
             throw new AssertionError("isColliding: You shouldn't test Entities against themselves!");
         }
@@ -73,5 +75,9 @@ public abstract class Entity {
                 || b.right() <= a.left()
                 || a.bottom() <= b.top()
                 || b.bottom() <= a.top());
+    }
+
+    public static void setGame(Game game) {
+        _game = game;
     }
 }

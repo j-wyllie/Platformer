@@ -5,14 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.joshuawyllie.platformer.entity.Entity;
+import com.joshuawyllie.platformer.level.LevelManager;
 import com.joshuawyllie.platformer.level.TestLevel;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callback {
     public static final String TAG = "Game";
@@ -28,17 +28,26 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private Canvas _canvas;
 
     private ArrayList<Entity> _entities = new ArrayList<>();
-    private TestLevel testLevel = new TestLevel();
+    private LevelManager level = null;
 
     public Game(Context context) {
         super(context);
-        Entity._game = this;
+        Entity.setGame(this);
         _holder = getHolder();
         _holder.addCallback(this);
         _holder.setFixedSize(STAGE_WIDTH, STAGE_HEIGHT);
         _paint = new Paint();
-
+        level = new LevelManager(new TestLevel());
     }
+
+    public int worldToScreenX(float widthMeters) {
+        return (int) widthMeters * 50;
+    }     //todo
+
+    public int worldToScreenY(float heightMeters) {
+        return (int) heightMeters * 50;
+    }
+
 
     private void restart() {
         for (Entity entity : _entities) {
@@ -111,8 +120,13 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
             entity.destroy();
         }
 
+        if (level != null) {
+            level.destroy();
+            level = null;
+        }
+
         _gameThread = null;
-        Entity._game = null;
+        Entity.setGame(null);
     }
 
     @Override
