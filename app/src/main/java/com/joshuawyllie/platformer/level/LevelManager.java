@@ -1,6 +1,7 @@
 package com.joshuawyllie.platformer.level;
 
 import com.joshuawyllie.platformer.entity.Entity;
+import com.joshuawyllie.platformer.entity.Player;
 import com.joshuawyllie.platformer.entity.StaticEntity;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ public class LevelManager {
     private int levelWidth;
     private int levelHeight;
 
-    private final ArrayList<Entity> entities = new ArrayList();
+    public final ArrayList<Entity> entities = new ArrayList();
     private final ArrayList<Entity> entitiesToAdd = new ArrayList();
     private final ArrayList<Entity> entitiesToRemove = new ArrayList();
 
@@ -36,11 +37,18 @@ public class LevelManager {
     private void createEntity(final String spriteName, final int xPos, final int yPos) {
         Entity entity;
         if (spriteName == LevelData.PLAYER) {
-
+            entity = new Player(spriteName, xPos, yPos);
         } else {
             entity = new StaticEntity(spriteName, xPos, yPos);
         }
-        //addEntity(entity);
+        addEntity(entity);
+    }
+
+    public void update(final double dt) {
+        for (Entity entity : entities) {
+            entity.update(dt);
+        }
+        refreshEntities();
     }
 
     private void refreshEntities() {

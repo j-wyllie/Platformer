@@ -20,7 +20,7 @@ public class TestLevel extends LevelData {
                 {0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0}
         };
-        updateLevelDimentions();
+        updateLevelDimensions();
     }
 
     @Override

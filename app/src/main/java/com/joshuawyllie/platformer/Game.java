@@ -3,6 +3,7 @@ package com.joshuawyllie.platformer;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -15,10 +16,13 @@ import com.joshuawyllie.platformer.level.TestLevel;
 import java.util.ArrayList;
 
 public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callback {
+
     public static final String TAG = "Game";
     public static final int STAGE_WIDTH = 1280;
-    public static final int STAGE_HEIGHT = 720 ;
+    public static final int STAGE_HEIGHT = 720;
 
+    private static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
+    private static Matrix viewTransform = new Matrix();
 
     private Thread _gameThread;
     private volatile boolean _isRunning = false;
@@ -48,33 +52,41 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         return (int) heightMeters * 50;
     }
 
-
-    private void restart() {
-        for (Entity entity : _entities) {
-            entity.respawn();
-        }
-    }
-
     @Override
     public void run() {
+        long lastFrame = System.nanoTime();
         while (_isRunning) {
-            update();
-            render();
+            final double dt = (lastFrame - System.nanoTime()) * NANOS_TO_SECONDS;
+            lastFrame = System.nanoTime();
+            update(dt);
+            render(level.entities);
         }
     }
 
-    private void update() {
-
+    private void update(final double dt) {
+        level.update(dt);
+        for (Entity entity : level.entities) {
+            entity.update(dt);
+        }
     }
 
 
-    private void render() {
-        if (!acquireAndLockCanvas()) return;
-        _canvas.drawColor(Color.BLACK);
-        for (Entity entity : _entities) {
-            entity.render(_canvas, _paint);
+    private void render(final ArrayList<Entity> visibleEntities) {
+        if (!acquireAndLockCanvas()) {
+            return;
         }
-        _holder.unlockCanvasAndPost(_canvas);
+        try {
+            _canvas.drawColor(Color.CYAN);
+            for (final Entity entity : visibleEntities) {
+                viewTransform.reset();
+                float xPos = worldToScreenX(entity.getX());
+                float yPos = worldToScreenY(entity.getY());
+                viewTransform.postTranslate(xPos, yPos);
+                entity.render(_canvas, _paint, viewTransform);
+            }
+        } finally {
+            _holder.unlockCanvasAndPost(_canvas);
+        }
     }
 
 

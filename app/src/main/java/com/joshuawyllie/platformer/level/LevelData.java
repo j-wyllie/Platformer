@@ -9,12 +9,12 @@ public abstract class LevelData {
     int height;
 
     public int getTile(final int x, final int y) {
-        return tiles[x][y];
+        return tiles[y][x];
     }
 
-    void updateLevelDimentions() {
-        width = tiles.length;
-        height = tiles[0].length;
+    void updateLevelDimensions() {
+        width = tiles[0].length;
+        height = tiles.length;
     }
 
     abstract public String getSpriteName(final int tileNum);

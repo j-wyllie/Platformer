@@ -1,6 +1,7 @@
 package com.joshuawyllie.platformer.entity;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 
 import com.joshuawyllie.platformer.Game;
@@ -13,18 +14,14 @@ public abstract class Entity {
     float _y = 0;
     float _width = 0;
     float _height = 0;
-    float _velX = 0;
-    float _velY = 0;
 
-    public void update() {
-        _x += _velX;
-        _y += _velY;
-    }
-    public void render(final Canvas canvas, final Paint paint) {}
+    public void update(final double dt) {}
+    public void render(final Canvas canvas, final Paint paint, final Matrix viewTransform) {}
     public void onCollision(final Entity that) {}
     public void destroy() {}
-    public void respawn() {}
 
+    public float getX() { return _x; }
+    public float getY() { return  _y; }
     public float left() {
         return _x;
     }

@@ -1,9 +1,6 @@
 package com.joshuawyllie.platformer.entity;
 
-import com.joshuawyllie.platformer.Game;
-import com.joshuawyllie.platformer.util.Utils;
-
-public class Player extends StaticEntity {
+public class Player extends DynamicEntity  {
 
     private final static int tagetHeight = 100;
     private final static int STARTING_POS = 40;
@@ -20,15 +17,15 @@ public class Player extends StaticEntity {
     private boolean _recovery = false;
     private int _framesPast = 0;
 
-    Player(final String spriteName, final int xPos, final int yPos) {
+    public Player(final String spriteName, final int xPos, final int yPos) {
         super(spriteName, xPos, yPos);
         //loadBitmap(R.drawable.player_ship, tagetHeight);
-        respawn();
     }
 
     @Override
-    public void update() {
-        _y += _velY;
+    public void update(final double dt) {
+        _x += _velX * dt;
+        _y += _velY * dt;
 
         _framesPast++;
     }
