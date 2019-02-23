@@ -9,16 +9,16 @@ import com.joshuawyllie.platformer.util.BitmapUtils;
 
 public class StaticEntity extends Entity {
 
-    private static final float DEFAULT_DIMENTIONS = 1.0f;
+    private static final float DEFAULT_DIMENSIONS = 1.0f;
 
     protected Bitmap _bitmap = null;
 
     public StaticEntity(final String spriteName, final int xPos, final int yPos) {
-        _width = DEFAULT_DIMENTIONS;
-        _height = DEFAULT_DIMENTIONS;
-        _x = xPos * _game.worldToScreenX(_width);
-        _y = yPos * _game.worldToScreenY(_height);
-        loadBitmap(spriteName, 100, 100);
+        _width = DEFAULT_DIMENSIONS;
+        _height = DEFAULT_DIMENSIONS;
+        _x = xPos;
+        _y = yPos;
+        loadBitmap(spriteName, 120, 120);
     }
 
     protected void loadBitmap(final String spriteName, final int xPos, final int yPos) {
@@ -33,7 +33,7 @@ public class StaticEntity extends Entity {
     }
     @Override
     public void render(Canvas canvas, Paint paint, Matrix viewTransform) {
-        canvas.drawBitmap(_bitmap, _x, _y, paint);
+        canvas.drawBitmap(_bitmap, viewTransform, paint);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.joshuawyllie.platformer.entity;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PointF;
 
 import com.joshuawyllie.platformer.Game;
 
@@ -22,12 +23,12 @@ public abstract class Entity {
 
     public float getX() { return _x; }
     public float getY() { return  _y; }
+    public float getWidth() { return _width; }
+    public float getHeight() { return _height; }
     public float left() {
         return _x;
     }
-    public float right() {
-        return _x + _width;
-    }
+    public float right() { return _x + _width; }
     public float top() {
         return _y;
     }
@@ -73,6 +74,41 @@ public abstract class Entity {
                 || a.bottom() <= b.top()
                 || b.bottom() <= a.top());
     }
+
+
+    //SAT intersection test. http://www.metanetsoftware.com/technique/tutorialA.html
+    //returns true on intersection, and sets the least intersecting axis in overlap
+    static final PointF overlap = new PointF( 0 , 0 ); //Q&D PointF pool for collision detection. Assumes single threading.
+    @SuppressWarnings ( "UnusedReturnValue" )
+    static boolean getOverlap( final Entity a, final Entity b, final PointF overlap) {
+        overlap.x = 0.0f;
+        overlap.y = 0.0f;
+        final float centerDeltaX = a.centerX() - b.centerX();
+        final float halfWidths = (a._width + b._width) * 0.5f;
+        float dx = Math.abs(centerDeltaX); //cache the abs, we need it twice
+
+        if (dx > halfWidths) return false ; //no overlap on x == no collision
+
+        final float centerDeltaY = a.centerY() - b.centerY();
+        final float halfHeights = (a._height + b._height) * 0.5f;
+        float dy = Math.abs(centerDeltaY);
+
+        if (dy > halfHeights) return false ; //no overlap on y == no collision
+
+        dx = halfWidths - dx; //overlap on x
+        dy = halfHeights - dy; //overlap on y
+        if (dy < dx) {
+            overlap.y = (centerDeltaY < 0 ) ? -dy : dy;
+        } else if (dy > dx) {
+            overlap.x = (centerDeltaX < 0 ) ? -dx : dx;
+        } else {
+            overlap.x = (centerDeltaX < 0 ) ? -dx : dx;
+            overlap.y = (centerDeltaY < 0 ) ? -dy : dy;
+        }
+        return true ;
+    }
+
+
 
     public static void setGame(Game game) {
         _game = game;

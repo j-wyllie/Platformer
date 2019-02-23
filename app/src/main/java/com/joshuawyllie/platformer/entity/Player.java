@@ -19,30 +19,5 @@ public class Player extends DynamicEntity  {
 
     public Player(final String spriteName, final int xPos, final int yPos) {
         super(spriteName, xPos, yPos);
-        //loadBitmap(R.drawable.player_ship, tagetHeight);
     }
-
-    @Override
-    public void update(final double dt) {
-        _x += _velX * dt;
-        _y += _velY * dt;
-
-        _framesPast++;
-    }
-
-
-    @Override
-    public void onCollision(Entity that) {
-        if (_framesPast > NUM_RECOVERY_FRAMES) {
-            _recovery = false;
-            _framesPast = 0;
-        }
-
-      if (!_recovery) {
-            _recovery = true;
-            _health--;
-            _framesPast = 0;
-        }
-    }
-
 }

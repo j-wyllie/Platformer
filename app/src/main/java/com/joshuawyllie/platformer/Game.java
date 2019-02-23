@@ -1,10 +1,12 @@
 package com.joshuawyllie.platformer;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -20,6 +22,9 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     public static final String TAG = "Game";
     public static final int STAGE_WIDTH = 1280;
     public static final int STAGE_HEIGHT = 720;
+    Viewport camera = null;
+    private static final float METERS_TO_SHOW_X = 16f; //set the value you want fixed
+    private static final float METERS_TO_SHOW_Y = 0f;  //the other is calculated at runtime!
 
     private static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
     private static Matrix viewTransform = new Matrix();
@@ -27,30 +32,42 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private Thread _gameThread;
     private volatile boolean _isRunning = false;
 
-    private SurfaceHolder _holder;
-    private Paint _paint;
+    private SurfaceHolder holder;
+    private Paint paint;
     private Canvas _canvas;
 
-    private ArrayList<Entity> _entities = new ArrayList<>();
+    private ArrayList<Entity> visibleEntities = new ArrayList<>();
     private LevelManager level = null;
 
     public Game(Context context) {
         super(context);
         Entity.setGame(this);
-        _holder = getHolder();
-        _holder.addCallback(this);
-        _holder.setFixedSize(STAGE_WIDTH, STAGE_HEIGHT);
-        _paint = new Paint();
+        holder = getHolder();
+        holder.addCallback(this);
+        holder.setFixedSize(STAGE_WIDTH, STAGE_HEIGHT);
+        paint = new Paint();
+        camera = new Viewport(1280, 720, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
         level = new LevelManager(new TestLevel());
     }
 
-    public int worldToScreenX(float widthMeters) {
-        return (int) widthMeters * 50;
-    }     //todo
-
-    public int worldToScreenY(float heightMeters) {
-        return (int) heightMeters * 50;
+    public int worldToScreenX(float worldMeters) {
+        return (int) (worldMeters * camera.getPixelsPerMeterX());
     }
+    public int worldToScreenY(float worldMeters) {
+        return (int) (worldMeters * camera.getPixelsPerMeterY());
+    }
+    public float screenToWorldX(float pixelDistance) {
+        return pixelDistance / camera.getPixelsPerMeterX();
+    }
+    public float screenToWorldY(float pixelDistance) {
+        return pixelDistance / camera.getPixelsPerMeterY();
+    }
+    public float getWorldWidth() { return level.getWidth(); }
+    public float getWorldHeight() { return level.getHeight(); }
+
+    public static int getScreenWidth() { return Resources.getSystem().getDisplayMetrics().widthPixels; }
+    public static int getScreenHeight() { return Resources.getSystem().getDisplayMetrics().heightPixels; }
+
 
     @Override
     public void run() {
@@ -59,18 +76,29 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
             final double dt = (lastFrame - System.nanoTime()) * NANOS_TO_SECONDS;
             lastFrame = System.nanoTime();
             update(dt);
-            render(level.entities);
+            buildVisibleSet();
+            render(visibleEntities);
         }
     }
 
     private void update(final double dt) {
+        camera.lookAt(level.getWidth() / 2, level.getHeight() / 2);
         level.update(dt);
         for (Entity entity : level.entities) {
             entity.update(dt);
         }
     }
 
+    private void buildVisibleSet() {
+        visibleEntities.clear();
+        for (final Entity entity : level.entities) {
+            if (camera.inView(entity)) {
+                visibleEntities.add(entity);
+            }
+        }
+    }
 
+    private static final Point position = new Point();
     private void render(final ArrayList<Entity> visibleEntities) {
         if (!acquireAndLockCanvas()) {
             return;
@@ -79,23 +107,22 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
             _canvas.drawColor(Color.CYAN);
             for (final Entity entity : visibleEntities) {
                 viewTransform.reset();
-                float xPos = worldToScreenX(entity.getX());
-                float yPos = worldToScreenY(entity.getY());
-                viewTransform.postTranslate(xPos, yPos);
-                entity.render(_canvas, _paint, viewTransform);
+                camera.worldToScreen(entity, position);
+                viewTransform.postTranslate(position.x, position.y);
+                entity.render(_canvas, paint, viewTransform);
             }
         } finally {
-            _holder.unlockCanvasAndPost(_canvas);
+            holder.unlockCanvasAndPost(_canvas);
         }
     }
 
 
 
     private boolean acquireAndLockCanvas() {
-        if (!_holder.getSurface().isValid()) {
+        if (!holder.getSurface().isValid()) {
             return false;
         }
-        _canvas = _holder.lockCanvas();
+        _canvas = holder.lockCanvas();
         return (_canvas != null);
     }
 
@@ -128,7 +155,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
 
-        for (Entity entity : _entities) {
+        for (Entity entity : visibleEntities) {
             entity.destroy();
         }
 

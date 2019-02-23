@@ -48,7 +48,23 @@ public class LevelManager {
         for (Entity entity : entities) {
             entity.update(dt);
         }
+        checkCollisions();
         refreshEntities();
+    }
+
+    private void checkCollisions() {
+        final int count = entities.size();
+        Entity a, b;
+        for (int i = 0;  i < count - 1; i++) {
+            a = entities.get(i);
+            for (int j = i + 1; j < count; j++) {
+                b = entities.get(j);
+                if (a.isColliding(b)) {
+                    a.onCollision(b);
+                    b.onCollision(a);
+                }
+            }
+        }
     }
 
     private void refreshEntities() {
@@ -66,6 +82,14 @@ public class LevelManager {
         if (entity != null) {
             entitiesToAdd.add(entity);
         }
+    }
+
+    public int getWidth() {
+        return levelWidth;
+    }
+
+    public int getHeight() {
+        return  levelHeight;
     }
 
     private void removeEntity(final Entity entity) {

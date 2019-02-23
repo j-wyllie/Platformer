@@ -15,9 +15,9 @@ public class TestLevel extends LevelData {
 
         tiles = new int[][] {
                 {0,0,0,0,0,0,0},
-                {0,0,1,0,0,0,0},
-                {0,3,2,2,2,4,0},
+                {0,0,0,1,0,0,0},
                 {0,0,0,0,0,0,0},
+                {0,3,2,2,2,4,0},
                 {0,0,0,0,0,0,0}
         };
         updateLevelDimensions();
