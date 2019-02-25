@@ -15,6 +15,8 @@ public class LevelManager {
     private final ArrayList<Entity> entitiesToAdd = new ArrayList();
     private final ArrayList<Entity> entitiesToRemove = new ArrayList();
 
+    private Player player = null;
+
 
     public LevelManager(final LevelData map) {
         levelWidth = map.width;
@@ -38,6 +40,9 @@ public class LevelManager {
         Entity entity;
         if (spriteName == LevelData.PLAYER) {
             entity = new Player(spriteName, xPos, yPos);
+            if (player == null) {
+                player = (Player) entity;
+            }
         } else {
             entity = new StaticEntity(spriteName, xPos, yPos);
         }
@@ -104,6 +109,7 @@ public class LevelManager {
             entity.destroy();
         }
         entities.clear();
+        player = null;
     }
 
     public void destroy() {

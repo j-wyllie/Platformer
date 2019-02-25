@@ -1,9 +1,13 @@
 package com.joshuawyllie.platformer;
 
 import android.os.Build;
+import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.joshuawyllie.platformer.input.InputManager;
+import com.joshuawyllie.platformer.input.TouchController;
 
 public class MainActivity extends AppCompatActivity {
     Game _game;
@@ -11,9 +15,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        _game = new Game(this);
-        setContentView(_game);
+        setContentView(R.layout.activity_main);
+        _game = findViewById(R.id.game);
         setFullScreen();
+        InputManager controls = new TouchController(findViewById(R.id.touchControl));
+        _game.setControls(controls);
     }
 
     @Override

@@ -7,11 +7,13 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.joshuawyllie.platformer.entity.Entity;
+import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.level.LevelManager;
 import com.joshuawyllie.platformer.level.TestLevel;
 
@@ -38,9 +40,39 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
 
     private ArrayList<Entity> visibleEntities = new ArrayList<>();
     private LevelManager level = null;
+    private InputManager controls = new InputManager();
 
     public Game(Context context) {
         super(context);
+        init();
+    }
+
+    public Game(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public Game(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public Game(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    public InputManager getControls() {
+        return controls;
+    }
+
+    public void setControls(final InputManager controls) {
+        this.controls.onPause();
+        this.controls.onStop();
+        this.controls = controls;
+    }
+
+    private void init() {
         Entity.setGame(this);
         holder = getHolder();
         holder.addCallback(this);
@@ -48,6 +80,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         paint = new Paint();
         camera = new Viewport(1280, 720, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
         level = new LevelManager(new TestLevel());
+        Log.d(TAG, String.format("resolution: %d : %d", STAGE_WIDTH, STAGE_HEIGHT));
     }
 
     public int worldToScreenX(float worldMeters) {
@@ -137,11 +170,13 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         Log.d(TAG, "onResume");
         _isRunning = true;
         _gameThread = new Thread(this);
+        controls.onResume();
     }
 
     public void onPause() {
         Log.d(TAG, "onPause");
         _isRunning = false;
+        controls.onPause();
         while (true) {
             try {
                 _gameThread.join();
@@ -154,18 +189,17 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
 
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-
         for (Entity entity : visibleEntities) {
             entity.destroy();
         }
-
         if (level != null) {
             level.destroy();
             level = null;
         }
-
+        controls = null;
         _gameThread = null;
         Entity.setGame(null);
+        holder.removeCallback(this);
     }
 
     @Override

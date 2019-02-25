@@ -9,13 +9,9 @@ import com.joshuawyllie.platformer.util.BitmapUtils;
 
 public class StaticEntity extends Entity {
 
-    private static final float DEFAULT_DIMENSIONS = 1.0f;
-
     protected Bitmap _bitmap = null;
 
     public StaticEntity(final String spriteName, final int xPos, final int yPos) {
-        _width = DEFAULT_DIMENSIONS;
-        _height = DEFAULT_DIMENSIONS;
         _x = xPos;
         _y = yPos;
         loadBitmap(spriteName, 120, 120);

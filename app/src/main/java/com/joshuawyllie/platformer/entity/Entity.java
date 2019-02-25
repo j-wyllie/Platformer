@@ -10,11 +10,12 @@ import com.joshuawyllie.platformer.Game;
 public abstract class Entity {
 
     static final String TAG = "Entity";
+    private static final float DEFAULT_DIMENSIONS = 1f;
     static Game _game = null; //shared ref, managed by the Game-class!
     float _x = 0;
     float _y = 0;
-    float _width = 0;
-    float _height = 0;
+    float _width = DEFAULT_DIMENSIONS;
+    float _height = DEFAULT_DIMENSIONS;
 
     public void update(final double dt) {}
     public void render(final Canvas canvas, final Paint paint, final Matrix viewTransform) {}
