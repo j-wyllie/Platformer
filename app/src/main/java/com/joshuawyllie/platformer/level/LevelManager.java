@@ -3,6 +3,7 @@ package com.joshuawyllie.platformer.level;
 import com.joshuawyllie.platformer.entity.Entity;
 import com.joshuawyllie.platformer.entity.Player;
 import com.joshuawyllie.platformer.entity.StaticEntity;
+import com.joshuawyllie.platformer.util.BitmapPool;
 
 import java.util.ArrayList;
 
@@ -15,12 +16,14 @@ public class LevelManager {
     private final ArrayList<Entity> entitiesToAdd = new ArrayList();
     private final ArrayList<Entity> entitiesToRemove = new ArrayList();
 
-    private Player player = null;
+    public Player player = null;
+    private BitmapPool pool = null;
 
 
-    public LevelManager(final LevelData map) {
+    public LevelManager(final LevelData map, final BitmapPool pool) {
         levelWidth = map.width;
         levelHeight = map.height;
+        this.pool = pool;
         loadMapAssets(map);
     }
 
@@ -110,6 +113,7 @@ public class LevelManager {
         }
         entities.clear();
         player = null;
+        pool.empty();
     }
 
     public void destroy() {

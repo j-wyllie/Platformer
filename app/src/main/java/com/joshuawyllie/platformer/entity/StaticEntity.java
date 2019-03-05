@@ -21,11 +21,7 @@ public class StaticEntity extends Entity {
         destroy();
         final int widthPixels = _game.worldToScreenX(_width);
         final int heightPixels = _game.worldToScreenY(_height);
-        try {
-            _bitmap = BitmapUtils.loadScaledBitmap(_game.getContext(), spriteName, widthPixels, heightPixels);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        _bitmap = _game.pool.createBitmap(spriteName, _width, _height);
     }
     @Override
     public void render(Canvas canvas, Paint paint, Matrix viewTransform) {
@@ -34,9 +30,5 @@ public class StaticEntity extends Entity {
 
     @Override
     public void destroy() {
-        if (_bitmap != null) {
-            _bitmap.recycle();
-            _bitmap = null;
-        }
     }
 }

@@ -10,6 +10,7 @@ import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.input.TouchController;
 
 public class MainActivity extends AppCompatActivity {
+
     Game _game;
 
     @Override

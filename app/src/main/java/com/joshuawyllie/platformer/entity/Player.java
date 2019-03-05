@@ -9,7 +9,7 @@ import com.joshuawyllie.platformer.input.InputManager;
 public class Player extends DynamicEntity  {
     private static final float PLAYER_RUN_SPEED = 6f;
     private static final float PLAYER_JUMP_VELOCITY = (GRAVITY / 2);
-    private static final int LEFT = 0;
+    private static final int LEFT = -1;
     private static final int RIGHT = 1;
     private static final float MIN_INPUT_TO_TURN = 0.05f;
     private static int facing = LEFT;

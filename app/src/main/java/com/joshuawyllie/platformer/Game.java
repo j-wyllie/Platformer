@@ -16,6 +16,7 @@ import com.joshuawyllie.platformer.entity.Entity;
 import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.level.LevelManager;
 import com.joshuawyllie.platformer.level.TestLevel;
+import com.joshuawyllie.platformer.util.BitmapPool;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,6 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     public static final String TAG = "Game";
     public static final int STAGE_WIDTH = 1280;
     public static final int STAGE_HEIGHT = 720;
-    Viewport camera = null;
     private static final float METERS_TO_SHOW_X = 16f; //set the value you want fixed
     private static final float METERS_TO_SHOW_Y = 0f;  //the other is calculated at runtime!
 
@@ -38,7 +38,9 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private Paint paint;
     private Canvas _canvas;
 
+    public BitmapPool pool = null;
     private ArrayList<Entity> visibleEntities = new ArrayList<>();
+    private Viewport camera = null;
     private LevelManager level = null;
     private InputManager controls = new InputManager();
 
@@ -79,7 +81,8 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         holder.setFixedSize(STAGE_WIDTH, STAGE_HEIGHT);
         paint = new Paint();
         camera = new Viewport(1280, 720, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
-        level = new LevelManager(new TestLevel());
+        pool = new BitmapPool(this);
+        level = new LevelManager(new TestLevel(), pool);
         Log.d(TAG, String.format("resolution: %d : %d", STAGE_WIDTH, STAGE_HEIGHT));
     }
 
@@ -110,12 +113,12 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
             lastFrame = System.nanoTime();
             update(dt);
             buildVisibleSet();
-            render(visibleEntities);
+            render(camera, visibleEntities);
         }
     }
 
     private void update(final double dt) {
-        camera.lookAt(level.getWidth() / 2, level.getHeight() / 2);
+        camera.lookAt(level.player);
         level.update(dt);
         for (Entity entity : level.entities) {
             entity.update(dt);
@@ -132,7 +135,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     }
 
     private static final Point position = new Point();
-    private void render(final ArrayList<Entity> visibleEntities) {
+    private void render(final Viewport camera, final ArrayList<Entity> visibleEntities) {
         if (!acquireAndLockCanvas()) {
             return;
         }
@@ -199,6 +202,10 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         controls = null;
         _gameThread = null;
         Entity.setGame(null);
+        if (pool != null) {
+            pool.empty();
+            pool = null;
+        }
         holder.removeCallback(this);
     }
 

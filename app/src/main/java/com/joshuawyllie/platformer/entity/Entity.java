@@ -109,8 +109,6 @@ public abstract class Entity {
         return true ;
     }
 
-
-
     public static void setGame(Game game) {
         _game = game;
     }
