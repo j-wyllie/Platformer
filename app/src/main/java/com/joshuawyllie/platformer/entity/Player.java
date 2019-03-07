@@ -31,9 +31,9 @@ public class Player extends DynamicEntity  {
     @Override
     public void update(final double dt) {
         final InputManager controls = _game.getControls();
-        final float direction = controls._horizontalFactor;
+        final float direction = controls.horizontalFactor;
         _velX = -direction * PLAYER_RUN_SPEED;
-        if (controls._isJumping && isOnGround) {
+        if (controls.isJumping && isOnGround) {
             _velY = PLAYER_JUMP_VELOCITY;
             isOnGround = false;
         }

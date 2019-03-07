@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.input.TouchController;
+import com.joshuawyllie.platformer.input.VirtualJoystick;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         _game = findViewById(R.id.game);
         setFullScreen();
-        InputManager controls = new TouchController(findViewById(R.id.touchControl));
+        //InputManager controls = new TouchController(findViewById(R.id.touchControl));
+        InputManager controls = new VirtualJoystick(findViewById(R.id.virtual_joystick));
         _game.setControls(controls);
     }
 

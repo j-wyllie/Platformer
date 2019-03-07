@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
-public class BitmapUtils {
+public abstract class BitmapUtils {
     private static final String TAG = "BitmapUtils" ;
     private static final boolean FILTER = true ;
     private static BitmapFactory.Options _options = new BitmapFactory.Options(); //Q&amp;D pool, assumes single threading
