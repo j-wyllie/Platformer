@@ -12,6 +12,7 @@ public class StaticEntity extends Entity {
     protected Bitmap _bitmap = null;
 
     public StaticEntity(final String spriteName, final int xPos, final int yPos) {
+        this.spriteName = spriteName;
         _x = xPos;
         _y = yPos;
         loadBitmap(spriteName, 120, 120);
@@ -23,6 +24,7 @@ public class StaticEntity extends Entity {
         final int heightPixels = _game.worldToScreenY(_height);
         _bitmap = _game.pool.createBitmap(spriteName, _width, _height);
     }
+
     @Override
     public void render(Canvas canvas, Paint paint, Matrix viewTransform) {
         canvas.drawBitmap(_bitmap, viewTransform, paint);
@@ -30,5 +32,9 @@ public class StaticEntity extends Entity {
 
     @Override
     public void destroy() {
+    }
+
+    public String getSpriteName() {
+        return spriteName;
     }
 }

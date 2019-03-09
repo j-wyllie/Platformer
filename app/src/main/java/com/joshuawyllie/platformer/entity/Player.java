@@ -5,26 +5,44 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 
 import com.joshuawyllie.platformer.input.InputManager;
+import com.joshuawyllie.platformer.level.LevelManager;
+import com.joshuawyllie.platformer.level.TestLevel;
+import com.joshuawyllie.platformer.util.Utils;
 
 public class Player extends DynamicEntity  {
     private static final float PLAYER_RUN_SPEED = 6f;
     private static final float PLAYER_JUMP_VELOCITY = (GRAVITY / 2);
+    private static final int INIT_HEALTH = 3;
+    private static final int MIN_HEALTH = 0;
+    private static final int MAX_HEALTH = 3;
     private static final int LEFT = -1;
     private static final int RIGHT = 1;
     private static final float MIN_INPUT_TO_TURN = 0.05f;
-    private static int facing = LEFT;
+    private static final int NUM_RECOVERY_FRAMES = 50;
+
+    private int facing = LEFT;
+    private int health = INIT_HEALTH;
+    private float size = 0.8f;
+    private int recoveryFrame = 0;
+    private boolean recoveryMode = false;
 
     public Player(final String spriteName, final int xPos, final int yPos) {
         super(spriteName, xPos, yPos);
     }
 
+    public float getSize() {
+        return size;
+    }
+
     @Override
     public void render(Canvas canvas, Paint paint, Matrix viewTransform) {
-        viewTransform.preScale(facing, 1.0f);
+        viewTransform.preScale(facing, size);
         if (facing == RIGHT) {
-            final float offset = -_game.worldToScreenX(_width);
-            viewTransform.postTranslate(offset, 0f);
+            final float offsetX = -_game.worldToScreenX(_width);
+            viewTransform.postTranslate(offsetX, 0f);
         }
+        final float offsetY = _game.worldToScreenY(1 - size);
+        viewTransform.postTranslate(0f, offsetY);
         super.render(canvas, paint, viewTransform);
     }
 
@@ -38,7 +56,19 @@ public class Player extends DynamicEntity  {
             isOnGround = false;
         }
         updateFacingDirection(direction);
+        updateHealth(dt);
         super.update(dt);
+    }
+
+    private void updateHealth(final double dt) {
+        health = (int) Utils.clamp(health, MIN_HEALTH, MAX_HEALTH);
+        if (recoveryMode) {
+            recoveryFrame++;
+            if (recoveryFrame > NUM_RECOVERY_FRAMES) {
+                recoveryMode = false;
+                recoveryFrame = 0;
+            }
+        }
     }
 
     private void updateFacingDirection(final float controlDirection) {
@@ -51,4 +81,17 @@ public class Player extends DynamicEntity  {
             facing = RIGHT;
         }
     }
+
+    @Override
+    public void onCollision(Entity that) {
+        super.onCollision(that);
+        if (that.getSpriteName().equals(TestLevel.SPEAR)) {
+            if (!recoveryMode) {
+                health--;
+                recoveryMode = true;
+            }
+        }
+    }
+
+    public int getHealth() { return health; }
 }

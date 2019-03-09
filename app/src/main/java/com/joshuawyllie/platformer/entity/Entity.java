@@ -16,6 +16,7 @@ public abstract class Entity {
     float _y = 0;
     float _width = DEFAULT_DIMENSIONS;
     float _height = DEFAULT_DIMENSIONS;
+    String spriteName = null;
 
     public void update(final double dt) {}
     public void render(final Canvas canvas, final Paint paint, final Matrix viewTransform) {}
@@ -112,4 +113,6 @@ public abstract class Entity {
     public static void setGame(Game game) {
         _game = game;
     }
+
+    public String getSpriteName() { return spriteName; }
 }

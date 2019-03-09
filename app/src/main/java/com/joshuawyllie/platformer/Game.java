@@ -25,24 +25,26 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     public static final String TAG = "Game";
     public static final int STAGE_WIDTH = 1280;
     public static final int STAGE_HEIGHT = 720;
-    private static final float METERS_TO_SHOW_X = 16f; //set the value you want fixed
+    private static final float METERS_TO_SHOW_X = 28f; //set the value you want fixed
     private static final float METERS_TO_SHOW_Y = 0f;  //the other is calculated at runtime!
 
     private static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
     private static Matrix viewTransform = new Matrix();
+    private static final Point cameraPosition = new Point();
 
     private Thread _gameThread;
     private volatile boolean _isRunning = false;
 
     private SurfaceHolder holder;
     private Paint paint;
-    private Canvas _canvas;
+    private Canvas canvas;
 
     public BitmapPool pool = null;
     private ArrayList<Entity> visibleEntities = new ArrayList<>();
     private Viewport camera = null;
     private LevelManager level = null;
     private InputManager controls = new InputManager();
+    private Hud hud = null;
 
     public Game(Context context) {
         super(context);
@@ -83,27 +85,41 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         camera = new Viewport(1280, 720, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
         pool = new BitmapPool(this);
         level = new LevelManager(new TestLevel(), pool);
+        hud = new Hud(this);
         Log.d(TAG, String.format("resolution: %d : %d", STAGE_WIDTH, STAGE_HEIGHT));
     }
 
     public int worldToScreenX(float worldMeters) {
         return (int) (worldMeters * camera.getPixelsPerMeterX());
     }
+
     public int worldToScreenY(float worldMeters) {
         return (int) (worldMeters * camera.getPixelsPerMeterY());
     }
+
     public float screenToWorldX(float pixelDistance) {
         return pixelDistance / camera.getPixelsPerMeterX();
     }
+
     public float screenToWorldY(float pixelDistance) {
         return pixelDistance / camera.getPixelsPerMeterY();
     }
-    public float getWorldWidth() { return level.getWidth(); }
-    public float getWorldHeight() { return level.getHeight(); }
 
-    public static int getScreenWidth() { return Resources.getSystem().getDisplayMetrics().widthPixels; }
-    public static int getScreenHeight() { return Resources.getSystem().getDisplayMetrics().heightPixels; }
+    public float getWorldWidth() {
+        return level.getWidth();
+    }
 
+    public float getWorldHeight() {
+        return level.getHeight();
+    }
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
 
     @Override
     public void run() {
@@ -120,6 +136,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private void update(final double dt) {
         camera.lookAt(level.player);
         level.update(dt);
+        hud.update(dt);
         for (Entity entity : level.entities) {
             entity.update(dt);
         }
@@ -134,32 +151,31 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         }
     }
 
-    private static final Point position = new Point();
     private void render(final Viewport camera, final ArrayList<Entity> visibleEntities) {
         if (!acquireAndLockCanvas()) {
             return;
         }
         try {
-            _canvas.drawColor(Color.CYAN);
+            canvas.drawColor(Color.CYAN);
             for (final Entity entity : visibleEntities) {
                 viewTransform.reset();
-                camera.worldToScreen(entity, position);
-                viewTransform.postTranslate(position.x, position.y);
-                entity.render(_canvas, paint, viewTransform);
+                camera.worldToScreen(entity, cameraPosition);
+                viewTransform.postTranslate(cameraPosition.x, cameraPosition.y);
+                entity.render(canvas, paint, viewTransform);
             }
+            hud.render(canvas, paint, level.getPlayer().getHealth());
         } finally {
-            holder.unlockCanvasAndPost(_canvas);
+            holder.unlockCanvasAndPost(canvas);
         }
     }
-
 
 
     private boolean acquireAndLockCanvas() {
         if (!holder.getSurface().isValid()) {
             return false;
         }
-        _canvas = holder.lockCanvas();
-        return (_canvas != null);
+        canvas = holder.lockCanvas();
+        return (canvas != null);
     }
 
 

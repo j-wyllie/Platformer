@@ -41,7 +41,7 @@ public class LevelManager {
 
     private void createEntity(final String spriteName, final int xPos, final int yPos) {
         Entity entity;
-        if (spriteName == LevelData.PLAYER) {
+        if (spriteName.equals(LevelData.PLAYER)) {
             entity = new Player(spriteName, xPos, yPos);
             if (player == null) {
                 player = (Player) entity;
@@ -118,5 +118,9 @@ public class LevelManager {
 
     public void destroy() {
         cleanUp();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
