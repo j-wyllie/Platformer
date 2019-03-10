@@ -5,8 +5,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 
 import com.joshuawyllie.platformer.input.InputManager;
-import com.joshuawyllie.platformer.level.LevelManager;
-import com.joshuawyllie.platformer.level.TestLevel;
+import com.joshuawyllie.platformer.level.LevelOne;
 import com.joshuawyllie.platformer.util.Utils;
 
 public class Player extends DynamicEntity  {
@@ -36,9 +35,9 @@ public class Player extends DynamicEntity  {
 
     @Override
     public void render(Canvas canvas, Paint paint, Matrix viewTransform) {
-        viewTransform.preScale(facing, size);
-        if (facing == RIGHT) {
-            final float offsetX = -_game.worldToScreenX(_width);
+        viewTransform.preScale(facing * size, size);
+        if (facing == LEFT) {
+            final float offsetX = _game.worldToScreenX(_width);
             viewTransform.postTranslate(offsetX, 0f);
         }
         final float offsetY = _game.worldToScreenY(1 - size);
@@ -85,7 +84,7 @@ public class Player extends DynamicEntity  {
     @Override
     public void onCollision(Entity that) {
         super.onCollision(that);
-        if (that.getSpriteName().equals(TestLevel.SPEAR)) {
+        if (that.getSpriteName().equals(LevelOne.SPEAR)) {
             if (!recoveryMode) {
                 health--;
                 recoveryMode = true;

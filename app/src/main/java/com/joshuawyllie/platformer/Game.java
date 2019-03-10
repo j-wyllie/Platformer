@@ -15,7 +15,7 @@ import android.view.SurfaceView;
 import com.joshuawyllie.platformer.entity.Entity;
 import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.level.LevelManager;
-import com.joshuawyllie.platformer.level.TestLevel;
+import com.joshuawyllie.platformer.level.LevelOne;
 import com.joshuawyllie.platformer.util.BitmapPool;
 
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         paint = new Paint();
         camera = new Viewport(1280, 720, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
         pool = new BitmapPool(this);
-        level = new LevelManager(new TestLevel(), pool);
+        level = new LevelManager(new LevelOne(getContext()), pool);
         hud = new Hud(this);
         Log.d(TAG, String.format("resolution: %d : %d", STAGE_WIDTH, STAGE_HEIGHT));
     }
