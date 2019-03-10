@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 
+import com.joshuawyllie.platformer.GameEvent;
 import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.level.LevelOne;
 import com.joshuawyllie.platformer.util.Utils;
@@ -59,6 +60,12 @@ public class Player extends DynamicEntity  {
         super.update(dt);
     }
 
+    @Override
+    public void restart() {
+        super.restart();
+        health = INIT_HEALTH;
+    }
+
     private void updateHealth(final double dt) {
         health = (int) Utils.clamp(health, MIN_HEALTH, MAX_HEALTH);
         if (recoveryMode) {
@@ -67,6 +74,9 @@ public class Player extends DynamicEntity  {
                 recoveryMode = false;
                 recoveryFrame = 0;
             }
+        }
+        if (health == 0) {
+            _game.onGameEvent(GameEvent.DEATH, this);
         }
     }
 

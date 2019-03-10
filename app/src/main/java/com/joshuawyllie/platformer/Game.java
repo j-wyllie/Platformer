@@ -20,13 +20,15 @@ import com.joshuawyllie.platformer.util.BitmapPool;
 
 import java.util.ArrayList;
 
+import static com.joshuawyllie.platformer.GameEvent.*;
+
 public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callback {
 
     public static final String TAG = "Game";
     public static final int STAGE_WIDTH = 1280;
     public static final int STAGE_HEIGHT = 720;
-    private static final float METERS_TO_SHOW_X = 28f; //set the value you want fixed
-    private static final float METERS_TO_SHOW_Y = 0f;  //the other is calculated at runtime!
+    private static final float METERS_TO_SHOW_X = 0f; //set the value you want fixed
+    private static final float METERS_TO_SHOW_Y = 16f;  //the other is calculated at runtime!
 
     private static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
     private static Matrix viewTransform = new Matrix();
@@ -134,7 +136,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     }
 
     private void update(final double dt) {
-        camera.lookAt(level.player);
+        camera.lookAt(level.getPlayer());
         level.update(dt);
         hud.update(dt);
         for (Entity entity : level.entities) {
@@ -178,9 +180,16 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         return (canvas != null);
     }
 
-
     public void onGameEvent(final GameEvent event, final Entity e /*can be null!*/) {
+        switch (event) {
+            case DEATH:
+                restart();
+        }
+    }
 
+    private void restart() {
+        level.getPlayer().restart();
+        hud.restart();
     }
 
     // Below: Executing on the UI thread
@@ -223,6 +232,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
             pool = null;
         }
         holder.removeCallback(this);
+        hud = null;
     }
 
     @Override

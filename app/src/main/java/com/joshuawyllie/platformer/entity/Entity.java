@@ -22,6 +22,7 @@ public abstract class Entity {
     public void render(final Canvas canvas, final Paint paint, final Matrix viewTransform) {}
     public void onCollision(final Entity that) {}
     public void destroy() {}
+    public void restart() {}
 
     public float getX() { return _x; }
     public float getY() { return  _y; }

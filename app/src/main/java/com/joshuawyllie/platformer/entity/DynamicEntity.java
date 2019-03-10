@@ -8,6 +8,8 @@ public class DynamicEntity extends StaticEntity {
     private static final float MAX_DELTA = 0.48f;
     static final float GRAVITY = 40f;
 
+    int init_x;
+    int init_y;
     float _velX = 0;
     float _velY = 0;
     float gravity = GRAVITY;
@@ -15,6 +17,8 @@ public class DynamicEntity extends StaticEntity {
 
     public DynamicEntity(String spriteName, int xPos, int yPos) {
         super(spriteName, xPos, yPos);
+        init_x = xPos;
+        init_y = yPos;
     }
 
     @Override
@@ -42,5 +46,11 @@ public class DynamicEntity extends StaticEntity {
                 isOnGround = true;
             }
         }
+    }
+
+    @Override
+    public void restart() {
+        _x = init_x;
+        _y = init_y;
     }
 }

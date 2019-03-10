@@ -16,7 +16,7 @@ public class LevelManager {
     private final ArrayList<Entity> entitiesToAdd = new ArrayList();
     private final ArrayList<Entity> entitiesToRemove = new ArrayList();
 
-    public Player player = null;
+    private Player player = null;
     private BitmapPool pool = null;
 
 
