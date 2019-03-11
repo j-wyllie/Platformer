@@ -19,30 +19,25 @@ public class Player extends DynamicEntity  {
     private static final int RIGHT = 1;
     private static final float MIN_INPUT_TO_TURN = 0.05f;
     private static final int NUM_RECOVERY_FRAMES = 50;
+    private static final float WIDTH = 0.8f;
+    private static final float HEIGHT = 0.8f;
 
     private int facing = LEFT;
     private int health = INIT_HEALTH;
-    private float size = 0.8f;
     private int recoveryFrame = 0;
     private boolean recoveryMode = false;
 
     public Player(final String spriteName, final int xPos, final int yPos) {
-        super(spriteName, xPos, yPos);
-    }
-
-    public float getSize() {
-        return size;
+        super(spriteName, xPos, yPos, WIDTH, HEIGHT);
     }
 
     @Override
     public void render(Canvas canvas, Paint paint, Matrix viewTransform) {
-        viewTransform.preScale(facing * size, size);
+        viewTransform.preScale(facing, 1f);
         if (facing == LEFT) {
             final float offsetX = _game.worldToScreenX(_width);
             viewTransform.postTranslate(offsetX, 0f);
         }
-        final float offsetY = _game.worldToScreenY(1 - size);
-        viewTransform.postTranslate(0f, offsetY);
         super.render(canvas, paint, viewTransform);
     }
 

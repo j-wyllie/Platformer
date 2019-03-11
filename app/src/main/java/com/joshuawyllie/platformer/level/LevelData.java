@@ -9,6 +9,13 @@ import java.util.ArrayList;
 public abstract class LevelData {
     public final static String NULL_SPRITE = "null_sprite";
     public final static String PLAYER = "lightblue_right1";
+    public static final String SPEAR = "spearsup_brown";
+    public static final String BACKGROUND = "background";
+    public static final String ICE_SQUARE = "zigzagsnow_icesquare";
+    public static final String ICE_ROUND_LEFT = "zigzagsnow_ice_2roundleft";
+    public static final String ICE_ROUND_RIGHT = "zigzagsnow_ice_2roundright";
+    public static final String COIN_YELLOW = "coinyellow_shade";
+
     public final static int NO_TILE = 0;
     private ArrayList<ArrayList<Integer>> tiles = new ArrayList<ArrayList<Integer>>();
     int width;

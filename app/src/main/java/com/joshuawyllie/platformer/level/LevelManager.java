@@ -1,5 +1,6 @@
 package com.joshuawyllie.platformer.level;
 
+import com.joshuawyllie.platformer.entity.Coin;
 import com.joshuawyllie.platformer.entity.Entity;
 import com.joshuawyllie.platformer.entity.Player;
 import com.joshuawyllie.platformer.entity.StaticEntity;
@@ -18,7 +19,6 @@ public class LevelManager {
 
     private Player player = null;
     private BitmapPool pool = null;
-
 
     public LevelManager(final LevelData map, final BitmapPool pool) {
         levelWidth = map.width;
@@ -41,21 +41,27 @@ public class LevelManager {
 
     private void createEntity(final String spriteName, final int xPos, final int yPos) {
         Entity entity;
-        if (spriteName.equals(LevelData.PLAYER)) {
-            entity = new Player(spriteName, xPos, yPos);
-            if (player == null) {
-                player = (Player) entity;
-            }
-        } else {
-            entity = new StaticEntity(spriteName, xPos, yPos);
+        switch (spriteName) {
+            case LevelData.PLAYER:
+                entity = new Player(spriteName, xPos, yPos);
+                if (player == null) {
+                    player = (Player) entity;
+                }
+                break;
+            case LevelData.COIN_YELLOW:
+                entity = new Coin(spriteName, xPos, yPos);
+                break;
+            default:
+                entity = new StaticEntity(spriteName, xPos, yPos);
+                break;
         }
         addEntity(entity);
     }
 
     public void update(final double dt) {
-        for (Entity entity : entities) {
-            entity.update(dt);
-        }
+       // for (Entity entity : entities) {
+        //    entity.update(dt);
+      //  }
         checkCollisions();
         refreshEntities();
     }

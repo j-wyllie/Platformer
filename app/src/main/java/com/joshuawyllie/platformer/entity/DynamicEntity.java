@@ -6,7 +6,7 @@ import com.joshuawyllie.platformer.util.Utils;
 public class DynamicEntity extends StaticEntity {
 
     private static final float MAX_DELTA = 0.48f;
-    static final float GRAVITY = 40f;
+    static final float GRAVITY = 55f;
 
     int init_x;
     int init_y;
@@ -17,6 +17,14 @@ public class DynamicEntity extends StaticEntity {
 
     public DynamicEntity(String spriteName, int xPos, int yPos) {
         super(spriteName, xPos, yPos);
+        init(xPos, yPos);
+    }
+
+    public DynamicEntity(String spriteName, float xPos, float yPos, float width, float height) {
+        super(spriteName, xPos, yPos, width, height);
+    }
+
+    private void init(int xPos, int yPos) {
         init_x = xPos;
         init_y = yPos;
     }

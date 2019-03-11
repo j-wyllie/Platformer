@@ -11,7 +11,17 @@ public class StaticEntity extends Entity {
 
     protected Bitmap _bitmap = null;
 
-    public StaticEntity(final String spriteName, final int xPos, final int yPos) {
+    public StaticEntity(final String spriteName, final float xPos, final float yPos) {
+        init(spriteName, xPos, yPos);
+    }
+
+    public StaticEntity(final String spriteName, final float xPos, final float yPos, final float width, final float height) {
+        this._width = width;
+        this._height = height;
+        init(spriteName, xPos, yPos);
+    }
+
+    private void init(final String spriteName, final float xPos, final float yPos) {
         this.spriteName = spriteName;
         _x = xPos;
         _y = yPos;

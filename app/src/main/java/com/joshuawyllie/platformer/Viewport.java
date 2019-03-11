@@ -108,16 +108,16 @@ class Viewport {
         lookAt(pos.x, pos.y);
     }
 
-    public void worldToScreen(final float worldPosX, final float worldPosY, Point screenPos) {
-        screenPos.x = (int) (mScreenCenterX - ((mLookAt.x - worldPosX) * mPixelsPerMeterX));
-        screenPos.y = (int) (mScreenCenterY - ((mLookAt.y - worldPosY) * mPixelsPerMeterY));
+    public void worldToScreen(final float worldPosX, final float worldPosY, PointF screenPos) {
+        screenPos.x = ((float) mScreenCenterX - ((mLookAt.x - worldPosX) * (float) mPixelsPerMeterX));
+        screenPos.y = ((float) mScreenCenterY - ((mLookAt.y - worldPosY) * (float) mPixelsPerMeterY));
     }
 
-    public void worldToScreen(final PointF worldPos, Point screenPos) {
+    public void worldToScreen(final PointF worldPos, PointF screenPos) {
         worldToScreen(worldPos.x, worldPos.y, screenPos);
     }
 
-    public void worldToScreen(final Entity e, final Point screenPos) {
+    public void worldToScreen(final Entity e, final PointF screenPos) {
         worldToScreen(e.getX(), e.getY(), screenPos);
     }
 }

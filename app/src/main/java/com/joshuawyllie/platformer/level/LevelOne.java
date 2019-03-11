@@ -7,12 +7,6 @@ import com.joshuawyllie.platformer.R;
 
 public class LevelOne extends LevelData {
 
-    public static final String SPEAR = "spearsup_brown";
-    public static final String BACKGROUND = "background";
-    public static final String ICE_SQUARE = "zigzagsnow_icesquare";
-    public static final String ICE_ROUND_LEFT = "zigzagsnow_ice_2roundleft";
-    public static final String ICE_ROUND_RIGHT = "zigzagsnow_ice_2roundright";
-
     private Context context = null;
     private SparseArray<String> tileIdToSpriteName = new SparseArray<>();
     private String levelString;
@@ -27,6 +21,7 @@ public class LevelOne extends LevelData {
         tileIdToSpriteName.put(3, ICE_ROUND_LEFT);
         tileIdToSpriteName.put(4, ICE_ROUND_RIGHT);
         tileIdToSpriteName.put(5, SPEAR);
+        tileIdToSpriteName.put(6, COIN_YELLOW);
 
         setup(levelString);
     }

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -32,7 +33,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
 
     private static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
     private static Matrix viewTransform = new Matrix();
-    private static final Point cameraPosition = new Point();
+    private static final PointF cameraPosition = new PointF();
 
     private Thread _gameThread;
     private volatile boolean _isRunning = false;
