@@ -30,12 +30,20 @@ public abstract class LevelData {
         return tiles.get(y).get(x);
     }
 
-    void updateLevelDimensions() {
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    private void updateLevelDimensions() {
         width = tiles.get(0).size();
         height = tiles.size();
     }
 
-    void parseLevelString(String levelString) {
+    private void parseLevelString(String levelString) {
         CharacterIterator iter = new StringCharacterIterator(levelString);
         int row = 0;
         tiles.add(new ArrayList<Integer>());

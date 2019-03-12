@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -15,11 +16,13 @@ import android.view.SurfaceView;
 
 import com.joshuawyllie.platformer.entity.Entity;
 import com.joshuawyllie.platformer.input.InputManager;
+import com.joshuawyllie.platformer.level.LevelData;
 import com.joshuawyllie.platformer.level.LevelManager;
 import com.joshuawyllie.platformer.level.LevelOne;
 import com.joshuawyllie.platformer.util.BitmapPool;
 
 import java.util.ArrayList;
+import java.util.concurrent.RecursiveAction;
 
 import static com.joshuawyllie.platformer.GameEvent.*;
 
@@ -30,6 +33,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     public static final int STAGE_HEIGHT = 720;
     private static final float METERS_TO_SHOW_X = 0f; //set the value you want fixed
     private static final float METERS_TO_SHOW_Y = 16f;  //the other is calculated at runtime!
+    private static RectF WORLD_EDGES = null;
 
     private static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
     private static Matrix viewTransform = new Matrix();
@@ -46,6 +50,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private ArrayList<Entity> visibleEntities = new ArrayList<>();
     private Viewport camera = null;
     private LevelManager level = null;
+    private LevelData currentLevel = null;
     private InputManager controls = new InputManager();
     private Hud hud = null;
 
@@ -87,7 +92,10 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         paint = new Paint();
         camera = new Viewport(1280, 720, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
         pool = new BitmapPool(this);
-        level = new LevelManager(new LevelOne(getContext()), pool);
+        currentLevel = new LevelOne(getContext());
+        level = new LevelManager(currentLevel, pool);
+        WORLD_EDGES = new RectF(-1f, -5f, currentLevel.getWidth(), currentLevel.getHeight() );
+        camera.setBounds(WORLD_EDGES);
         hud = new Hud(this);
         Log.d(TAG, String.format("resolution: %d : %d", STAGE_WIDTH, STAGE_HEIGHT));
     }

@@ -8,8 +8,8 @@ public class DynamicEntity extends StaticEntity {
     private static final float MAX_DELTA = 0.48f;
     static final float GRAVITY = 55f;
 
-    int init_x;
-    int init_y;
+    float init_x;
+    float init_y;
     float _velX = 0;
     float _velY = 0;
     float gravity = GRAVITY;
@@ -22,9 +22,10 @@ public class DynamicEntity extends StaticEntity {
 
     public DynamicEntity(String spriteName, float xPos, float yPos, float width, float height) {
         super(spriteName, xPos, yPos, width, height);
+        init(xPos, yPos);
     }
 
-    private void init(int xPos, int yPos) {
+    private void init(float xPos, float yPos) {
         init_x = xPos;
         init_y = yPos;
     }

@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import com.joshuawyllie.platformer.entity.Entity;
 
 class Viewport {
+    private final static float BUFFER = 2f; //overdraw, to avoid visual gaps
     private final PointF mLookAt = new PointF(0f, 0f);
     private int mPixelsPerMeterX; //viewport "density"
     private int mPixelsPerMeterY;
@@ -18,7 +19,7 @@ class Viewport {
     private float mMetersToShowY;
     private float mHalfDistX; //cached value (0.5*FOV)
     private float mHalfDistY;
-    private final static float BUFFER = 2f; //overdraw, to avoid visual gaps
+    private RectF worldEdges = null;
 
     public Viewport(final int screenWidth, final int screenHeight, final float metersToShowX, final float metersToShowY) {
         mScreenWidth = screenWidth;
@@ -96,8 +97,14 @@ class Viewport {
     }
 
     public void lookAt(final float x, final float y) {
-        mLookAt.x = x;
-        mLookAt.y = y;
+        PointF offset = worldBoundsOffset(x, y);
+        if (offset == null) {
+            mLookAt.x = x;
+            mLookAt.y = y;
+        } else {
+            mLookAt.x = x + offset.x;
+            mLookAt.y = y + offset.y;
+        }
     }
 
     public void lookAt(final Entity obj) {
@@ -119,5 +126,32 @@ class Viewport {
 
     public void worldToScreen(final Entity e, final PointF screenPos) {
         worldToScreen(e.getX(), e.getY(), screenPos);
+    }
+
+    public void setBounds(final RectF worldEdges) {
+        this.worldEdges = worldEdges;
+    }
+
+    private PointF worldBoundsOffset(final float x, final float y) {
+        if (worldEdges.isEmpty()) { return null; }
+        PointF offset = new PointF();
+        final float right = (x + mHalfDistX);
+        final float left = (x - mHalfDistX);
+        final float bottom = (y + mHalfDistY);
+        final float top = (y - mHalfDistY);
+        if (worldEdges.left <= left && worldEdges.right >= right && worldEdges.top <= top && worldEdges.bottom >= bottom) {
+            return null;
+        }
+        if (worldEdges.left - left > 0) {
+            offset.x = worldEdges.left - left;
+        } else if (worldEdges.right - right < 0) {
+            offset.x = worldEdges.right - right;
+        }
+        if (worldEdges.top - top > 0) {
+            offset.y = worldEdges.top - top;
+        } else if (worldEdges.bottom - bottom < 0) {
+            offset.y = worldEdges.bottom - bottom;
+        }
+        return offset;
     }
 }
