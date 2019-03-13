@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.media.AudioManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -46,6 +47,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private Paint paint;
     private Canvas canvas;
 
+    MainActivity activity = null;
     public BitmapPool pool = null;
     private ArrayList<Entity> visibleEntities = new ArrayList<>();
     private Viewport camera = null;
@@ -53,6 +55,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private LevelData currentLevel = null;
     private InputManager controls = new InputManager();
     private Hud hud = null;
+    private Jukebox jukebox = null;
 
     public Game(Context context) {
         super(context);
@@ -97,6 +100,9 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         WORLD_EDGES = new RectF(-1f, 0f, currentLevel.getWidth(), currentLevel.getHeight() );
         camera.setBounds(WORLD_EDGES);
         hud = new Hud(this, camera);
+        activity = (MainActivity) getContext();
+        activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        jukebox = new Jukebox(activity);
         Log.d(TAG, String.format("resolution: %d : %d", STAGE_WIDTH, STAGE_HEIGHT));
     }
 
@@ -189,6 +195,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     }
 
     public void onGameEvent(final GameEvent event) {
+        jukebox.playSoundForGameEvent(event);
         switch (event.getType()) {
             case DEATH:
                 restart();
@@ -213,10 +220,12 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         _isRunning = true;
         _gameThread = new Thread(this);
         controls.onResume();
+        jukebox.resumeBgMusic();
     }
 
     public void onPause() {
         Log.d(TAG, "onPause");
+        jukebox.pauseBgMusic();
         _isRunning = false;
         controls.onPause();
         while (true) {
