@@ -15,8 +15,8 @@ public abstract class LevelData {
     public static final String ICE_ROUND_LEFT = "zigzagsnow_ice_2roundleft";
     public static final String ICE_ROUND_RIGHT = "zigzagsnow_ice_2roundright";
     public static final String COIN_YELLOW = "coinyellow_shade";
-
     public final static int NO_TILE = 0;
+
     private ArrayList<ArrayList<Integer>> tiles = new ArrayList<ArrayList<Integer>>();
     int width;
     int height;

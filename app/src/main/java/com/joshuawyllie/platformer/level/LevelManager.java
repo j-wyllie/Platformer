@@ -16,9 +16,12 @@ public class LevelManager {
     public final ArrayList<Entity> entities = new ArrayList();
     private final ArrayList<Entity> entitiesToAdd = new ArrayList();
     private final ArrayList<Entity> entitiesToRemove = new ArrayList();
+    private final ArrayList<Entity> entitiesToResetOnRestart = new ArrayList<>();
 
     private Player player = null;
     private BitmapPool pool = null;
+    private int numCoins = 0;
+    private int initNumCoins = 0;
 
     public LevelManager(final LevelData map, final BitmapPool pool) {
         levelWidth = map.width;
@@ -37,6 +40,7 @@ public class LevelManager {
                 createEntity(spriteName, x, y);
             }
         }
+        initNumCoins = numCoins;
     }
 
     private void createEntity(final String spriteName, final int xPos, final int yPos) {
@@ -50,6 +54,7 @@ public class LevelManager {
                 break;
             case LevelData.COIN_YELLOW:
                 entity = new Coin(spriteName, xPos, yPos);
+                numCoins++;
                 break;
             default:
                 entity = new StaticEntity(spriteName, xPos, yPos);
@@ -59,9 +64,6 @@ public class LevelManager {
     }
 
     public void update(final double dt) {
-       // for (Entity entity : entities) {
-        //    entity.update(dt);
-      //  }
         checkCollisions();
         refreshEntities();
     }
@@ -106,7 +108,7 @@ public class LevelManager {
         return  levelHeight;
     }
 
-    private void removeEntity(final Entity entity) {
+    public void removeEntity(final Entity entity) {
         if (entity != null) {
             entitiesToRemove.add(entity);
         }
@@ -128,5 +130,21 @@ public class LevelManager {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public int getNumCoins() {
+        return numCoins;
+    }
+
+    public void onCoinCollision(Entity collisionWith) {
+        removeEntity(collisionWith);
+        entitiesToResetOnRestart.add(collisionWith);
+        numCoins--;
+    }
+
+    public void restart() {
+        entitiesToAdd.addAll(entitiesToResetOnRestart);
+        entitiesToResetOnRestart.clear();
+        numCoins = initNumCoins;
     }
 }

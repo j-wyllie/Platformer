@@ -10,6 +10,7 @@ public class LevelOne extends LevelData {
     private Context context = null;
     private SparseArray<String> tileIdToSpriteName = new SparseArray<>();
     private String levelString;
+
     public LevelOne(Context context) {
         this.context = context;
 

@@ -45,6 +45,9 @@ public class DynamicEntity extends StaticEntity {
 
     @Override
     public void onCollision(Entity that) {
+        if (!collidable || !that.collidable) {
+            return;
+        }
         Entity.getOverlap(this, that, Entity.overlap);
         _x += Entity.overlap.x;
         _y += Entity.overlap.y;

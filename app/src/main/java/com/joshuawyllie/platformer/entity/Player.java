@@ -26,6 +26,7 @@ public class Player extends DynamicEntity  {
     private int health = INIT_HEALTH;
     private int recoveryFrame = 0;
     private boolean recoveryMode = false;
+    private int numCollectables = 0;
 
     public Player(final String spriteName, final int xPos, final int yPos) {
         super(spriteName, xPos, yPos, WIDTH, HEIGHT);
@@ -59,6 +60,7 @@ public class Player extends DynamicEntity  {
     public void restart() {
         super.restart();
         health = INIT_HEALTH;
+        numCollectables = 0;
     }
 
     private void updateHealth(final double dt) {
@@ -71,7 +73,7 @@ public class Player extends DynamicEntity  {
             }
         }
         if (health == 0) {
-            _game.onGameEvent(GameEvent.DEATH, this);
+            _game.onGameEvent(new GameEvent(GameEvent.Type.DEATH));
         }
     }
 
@@ -89,12 +91,22 @@ public class Player extends DynamicEntity  {
     @Override
     public void onCollision(Entity that) {
         super.onCollision(that);
-        if (that.getSpriteName().equals(LevelOne.SPEAR)) {
-            if (!recoveryMode) {
-                health--;
-                recoveryMode = true;
-            }
+        switch (that.getSpriteName()) {
+            case LevelOne.SPEAR:
+                if (!recoveryMode) {
+                    health--;
+                    recoveryMode = true;
+                }
+                break;
         }
+    }
+
+    public void onCoinCollision() {
+        numCollectables++;
+    }
+
+    public int getNumbeOfCollectables() {
+        return numCollectables;
     }
 
     public int getHealth() { return health; }

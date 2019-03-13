@@ -35,7 +35,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private static final float METERS_TO_SHOW_Y = 16f;  //the other is calculated at runtime!
     private static RectF WORLD_EDGES = null;
 
-    private static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
+    public static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
     private static Matrix viewTransform = new Matrix();
     private static final PointF cameraPosition = new PointF();
 
@@ -94,9 +94,9 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         pool = new BitmapPool(this);
         currentLevel = new LevelOne(getContext());
         level = new LevelManager(currentLevel, pool);
-        WORLD_EDGES = new RectF(-1f, -5f, currentLevel.getWidth(), currentLevel.getHeight() );
+        WORLD_EDGES = new RectF(-1f, 0f, currentLevel.getWidth(), currentLevel.getHeight() );
         camera.setBounds(WORLD_EDGES);
-        hud = new Hud(this);
+        hud = new Hud(this, camera);
         Log.d(TAG, String.format("resolution: %d : %d", STAGE_WIDTH, STAGE_HEIGHT));
     }
 
@@ -174,12 +174,11 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
                 viewTransform.postTranslate(cameraPosition.x, cameraPosition.y);
                 entity.render(canvas, paint, viewTransform);
             }
-            hud.render(canvas, paint, level.getPlayer().getHealth());
+            hud.render(canvas, paint, level.getPlayer().getHealth(), level.getNumCoins(), level.getPlayer().getNumbeOfCollectables());
         } finally {
             holder.unlockCanvasAndPost(canvas);
         }
     }
-
 
     private boolean acquireAndLockCanvas() {
         if (!holder.getSurface().isValid()) {
@@ -189,14 +188,20 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         return (canvas != null);
     }
 
-    public void onGameEvent(final GameEvent event, final Entity e /*can be null!*/) {
-        switch (event) {
+    public void onGameEvent(final GameEvent event) {
+        switch (event.getType()) {
             case DEATH:
                 restart();
+                break;
+            case COIN_COLLISON:
+                level.onCoinCollision(event.getEntity());
+                level.getPlayer().onCoinCollision();
+                break;
         }
     }
 
     private void restart() {
+        level.restart();
         level.getPlayer().restart();
         hud.restart();
     }

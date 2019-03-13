@@ -17,6 +17,7 @@ public abstract class Entity {
     float _width = DEFAULT_DIMENSIONS;
     float _height = DEFAULT_DIMENSIONS;
     String spriteName = null;
+    boolean collidable = true;
 
     public void update(final double dt) {}
     public void render(final Canvas canvas, final Paint paint, final Matrix viewTransform) {}
