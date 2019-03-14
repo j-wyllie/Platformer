@@ -1,13 +1,11 @@
 package com.joshuawyllie.platformer;
 
 import android.os.Build;
-import android.renderscript.ScriptGroup;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.joshuawyllie.platformer.input.InputManager;
-import com.joshuawyllie.platformer.input.TouchController;
 import com.joshuawyllie.platformer.input.VirtualJoystick;
 
 public class MainActivity extends AppCompatActivity {

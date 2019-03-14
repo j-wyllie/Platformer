@@ -24,7 +24,7 @@ public class Jukebox {
     private boolean mSoundEnabled;
     private boolean mMusicEnabled;
     private Context context;
-    private HashMap<GameEvent, Integer> soundsMap;
+    private HashMap<GameEvent.Type, Integer> soundsMap;
     private SoundPool soundPool = null;
     private MediaPlayer mBgPlayer = null;
 
@@ -48,9 +48,11 @@ public class Jukebox {
 
     private void loadSounds() {
         createSoundPool();
-        soundsMap = new HashMap<GameEvent, Integer>();
-        //loadEventSound(GameEvent.Jump, "sfx/start.ogg");
-        //etc etc.. todo
+        soundsMap = new HashMap<>();
+        loadEventSound(GameEvent.Type.DEATH, context.getString(R.string.death_sound));
+        loadEventSound(GameEvent.Type.COIN_COLLISON, context.getString(R.string.coin_sound));
+        loadEventSound(GameEvent.Type.DAMAGE, context.getString(R.string.hit));
+        loadEventSound(GameEvent.Type.JUMP, context.getString(R.string.jump_sound));
     }
 
     public void playSoundForGameEvent(GameEvent event) {
@@ -62,7 +64,7 @@ public class Jukebox {
         final int priority = 1;
         final int loop = 0; //-1 loop forever, 0 play once
         final float rate = 1.0f;
-        final Integer soundID = soundsMap.get(event);
+        final Integer soundID = soundsMap.get(event.getType());
         if (soundID != null) {
             soundPool.play(soundID, leftVolume, rightVolume, priority, loop, rate);
         }
@@ -84,7 +86,7 @@ public class Jukebox {
         }
     }
 
-    private void loadEventSound(final GameEvent event, final String fileName) {
+    private void loadEventSound(final GameEvent.Type event, final String fileName) {
         try {
             AssetFileDescriptor afd = context.getAssets().openFd(fileName);
             int soundId = soundPool.load(afd, 1);
@@ -124,6 +126,7 @@ public class Jukebox {
                 .getDefaultSharedPreferences(context)
                 .edit()
                 .putBoolean(SOUNDS_PREF_KEY, mSoundEnabled)
+                .putBoolean(MUSIC_PREF_KEY, mMusicEnabled)
                 .commit();
     }
 

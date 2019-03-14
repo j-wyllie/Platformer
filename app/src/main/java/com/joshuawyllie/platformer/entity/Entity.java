@@ -22,6 +22,7 @@ public abstract class Entity {
     public void update(final double dt) {}
     public void render(final Canvas canvas, final Paint paint, final Matrix viewTransform) {}
     public void onCollision(final Entity that) {}
+    public void onSizeChange() {}
     public void destroy() {}
     public void restart() {}
 

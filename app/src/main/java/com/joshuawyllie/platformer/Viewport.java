@@ -3,6 +3,7 @@ package com.joshuawyllie.platformer;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.joshuawyllie.platformer.entity.Entity;
 

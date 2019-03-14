@@ -6,14 +6,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 import com.joshuawyllie.platformer.entity.Entity;
 import com.joshuawyllie.platformer.input.InputManager;
@@ -23,25 +24,25 @@ import com.joshuawyllie.platformer.level.LevelOne;
 import com.joshuawyllie.platformer.util.BitmapPool;
 
 import java.util.ArrayList;
-import java.util.concurrent.RecursiveAction;
-
-import static com.joshuawyllie.platformer.GameEvent.*;
 
 public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callback {
 
     public static final String TAG = "Game";
-    public static final int STAGE_WIDTH = 1280;
-    public static final int STAGE_HEIGHT = 720;
+    public static int STAGE_WIDTH = 1280;
+    public static int STAGE_HEIGHT = 720;
     private static final float METERS_TO_SHOW_X = 0f; //set the value you want fixed
     private static final float METERS_TO_SHOW_Y = 16f;  //the other is calculated at runtime!
-    private static RectF WORLD_EDGES = null;
-
     public static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
+    private static RectF worldEdges = null;
+
     private static Matrix viewTransform = new Matrix();
     private static final PointF cameraPosition = new PointF();
 
     private Thread _gameThread;
     private volatile boolean _isRunning = false;
+    private volatile boolean adjustRes = false;
+    private int width;
+    private int height;
 
     private SurfaceHolder holder;
     private Paint paint;
@@ -97,8 +98,8 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         pool = new BitmapPool(this);
         currentLevel = new LevelOne(getContext());
         level = new LevelManager(currentLevel, pool);
-        WORLD_EDGES = new RectF(-1f, 0f, currentLevel.getWidth(), currentLevel.getHeight() );
-        camera.setBounds(WORLD_EDGES);
+        worldEdges = new RectF(-1f, 0f, currentLevel.getWidth(), currentLevel.getHeight());
+        camera.setBounds(worldEdges);
         hud = new Hud(this, camera);
         activity = (MainActivity) getContext();
         activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -156,6 +157,10 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         hud.update(dt);
         for (Entity entity : level.entities) {
             entity.update(dt);
+        }
+        if (adjustRes) {
+            adjustRes = false;
+            onSizeChange(width, height);
         }
     }
 
@@ -268,8 +273,39 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         Log.d(TAG, "Surface changed");
         Log.d(TAG, "\t Width: " + width + " Height: " + height);
         if (_gameThread != null && _isRunning) {
+            adjustRes = true;
+            this.width = width;
+            this.height = height;
+            if (isPortrait(getContext())) {
+                holder.setFixedSize(STAGE_HEIGHT, STAGE_WIDTH);
+            }
             Log.d(TAG, "Game thread started");
             _gameThread.start();
+        }
+    }
+
+    private void onSizeChange(int width, int height) {
+        if (isPortrait(getContext())) {
+            camera = new Viewport(height, width, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
+        } else {
+            camera = new Viewport(width, height, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
+        }
+        camera.setBounds(worldEdges);
+        for (Entity entity : level.entities) {
+            entity.onSizeChange();
+        }
+    }
+    private boolean isPortrait(Context context){
+        final int rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getOrientation();
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                return true;
+            case Surface.ROTATION_90:
+                return false;
+            case Surface.ROTATION_180:
+                return true;
+            default:
+                return false;
         }
     }
 

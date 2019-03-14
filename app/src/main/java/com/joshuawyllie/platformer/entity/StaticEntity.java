@@ -36,6 +36,11 @@ public class StaticEntity extends Entity {
     }
 
     @Override
+    public void onSizeChange() {
+        loadBitmap(spriteName, 0, 0);
+    }
+
+    @Override
     public void render(Canvas canvas, Paint paint, Matrix viewTransform) {
         canvas.drawBitmap(_bitmap, viewTransform, paint);
     }

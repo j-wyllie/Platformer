@@ -21,4 +21,8 @@
         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n
         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n
     </string>
+    <string name="death_sound">sfx/death.wav</string>
+    <string name="coin_sound">sfx/pickup_coin.wav</string>
+    <string name="hit">sfx/hit_hurt.wav</string>
+    <string name="jump_sound">sfx/jump.wav</string>
 </resources>

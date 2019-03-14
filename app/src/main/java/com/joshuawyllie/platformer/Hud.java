@@ -39,8 +39,8 @@ public class Hud {
         paint.setTextSize(HUD_SIZE * camera.getPixelsPerMeterX());
         final float centerX = Game.STAGE_WIDTH / 2f;
         final float centerY = Game.STAGE_HEIGHT / 2f;
-        canvas.drawText("collectibles left: " + collectablesLeft, 1000 , 50, paint);
-        canvas.drawText("collectibles collected: " + collectiblesCollected, 1000, 100, paint);
+        canvas.drawText("collectibles left: " + collectablesLeft, Game.STAGE_WIDTH - 500 , 50, paint);
+        canvas.drawText("collectibles collected: " + collectiblesCollected, Game.STAGE_WIDTH - 500, 100, paint);
         switch (health) {
             case 0:
                 canvas.drawBitmap(emptyHeart, 4, 4, paint);

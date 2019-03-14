@@ -13,7 +13,8 @@ public class GameEvent {
         COLLISION,
         COIN_COLLISON,
         DEATH,
-        BOOST
+        DAMAGE,
+        JUMP
     }
 
     public GameEvent(Type type, Entity entity1, Entity entity2) {
