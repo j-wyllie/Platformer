@@ -17,14 +17,18 @@ public class Hud {
     private static final String PREFS = "com.joshuawyllie.platformer";
     private static final String LONGEST_DIST = "longest_distance";
 
+    private Game game = null;
     private Viewport camera = null;
     private Context context = null;
     private SharedPreferences _prefs = null;
     private SharedPreferences.Editor _editor = null;
     private Bitmap fullHeart = null;
     private Bitmap emptyHeart = null;
+    private int screenWidth = Game.STAGE_WIDTH;
+    private int screenHeight = Game.STAGE_HEIGHT;
 
     public Hud(Game game, Viewport camera) {
+        this.game = game;
         this.camera = camera;
         context = game.getContext();
         _prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
@@ -37,10 +41,10 @@ public class Hud {
         paint.setColor(Color.MAGENTA);
         paint.setTextAlign(Paint.Align.RIGHT);
         paint.setTextSize(HUD_SIZE * camera.getPixelsPerMeterX());
-        final float centerX = Game.STAGE_WIDTH / 2f;
-        final float centerY = Game.STAGE_HEIGHT / 2f;
-        canvas.drawText("collectibles left: " + collectablesLeft, Game.STAGE_WIDTH - 500 , 50, paint);
-        canvas.drawText("collectibles collected: " + collectiblesCollected, Game.STAGE_WIDTH - 500, 100, paint);
+        final float centerX = screenWidth / 2f;
+        final float centerY = screenHeight / 2f;
+        canvas.drawText("collectibles left: " + collectablesLeft, screenWidth - 50 , 50, paint);
+        canvas.drawText("collectibles collected: " + collectiblesCollected, screenWidth - 50, 100, paint);
         switch (health) {
             case 0:
                 canvas.drawBitmap(emptyHeart, 4, 4, paint);
@@ -69,7 +73,10 @@ public class Hud {
     }
 
     public void update(double dt) {
-
+        if (game.isPortrait(context)) {
+            screenWidth = Game.STAGE_HEIGHT;
+            screenHeight = Game.STAGE_WIDTH;
+        }
     }
 
     public void gameOver() {

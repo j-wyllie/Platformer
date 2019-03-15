@@ -28,8 +28,8 @@ import java.util.ArrayList;
 public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callback {
 
     public static final String TAG = "Game";
-    public static int STAGE_WIDTH = 1280;
-    public static int STAGE_HEIGHT = 720;
+    public static final int STAGE_WIDTH = 1280;
+    public static final int STAGE_HEIGHT = 720;
     private static final float METERS_TO_SHOW_X = 0f; //set the value you want fixed
     private static final float METERS_TO_SHOW_Y = 16f;  //the other is calculated at runtime!
     public static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
@@ -104,6 +104,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         activity = (MainActivity) getContext();
         activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         jukebox = new Jukebox(activity);
+        jukebox.resumeBgMusic();
         Log.d(TAG, String.format("resolution: %d : %d", STAGE_WIDTH, STAGE_HEIGHT));
     }
 
@@ -278,6 +279,8 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
             this.height = height;
             if (isPortrait(getContext())) {
                 holder.setFixedSize(STAGE_HEIGHT, STAGE_WIDTH);
+            } else {
+                holder.setFixedSize(STAGE_WIDTH, STAGE_HEIGHT);
             }
             Log.d(TAG, "Game thread started");
             _gameThread.start();
@@ -295,7 +298,8 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
             entity.onSizeChange();
         }
     }
-    private boolean isPortrait(Context context){
+
+    public boolean isPortrait(Context context){
         final int rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getOrientation();
         switch (rotation) {
             case Surface.ROTATION_0:

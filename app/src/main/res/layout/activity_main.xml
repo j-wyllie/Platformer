@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
@@ -9,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- <include layout="@layout/touchControl" /> -->
-    <include layout="@layout/virtual_joystick" />
-
+    <!--<include layout="@layout/touch_controls" />-->
+    <!--<include layout="@layout/virtual_joystick" />-->
 </FrameLayout>

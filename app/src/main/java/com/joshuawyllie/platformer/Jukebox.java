@@ -100,7 +100,7 @@ public class Jukebox {
         try {
             mBgPlayer = new MediaPlayer();
             AssetFileDescriptor afd = context
-                    .getAssets().openFd("sfx/sometrack.mp3");
+                    .getAssets().openFd("sfx/music.wav");
             mBgPlayer.setDataSource(
                     afd.getFileDescriptor(),
                     afd.getStartOffset(),

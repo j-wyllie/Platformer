@@ -4,7 +4,7 @@
     android:padding="@dimen/keypad_size"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/touchControl">
+    android:id="@+id/touch_controls">
 
     <Button android:id="@+id/keypad_up"
         android:layout_alignParentTop="true"

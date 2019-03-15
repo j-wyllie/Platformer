@@ -5,6 +5,12 @@ public class InputManager {
     public float horizontalFactor = 0.0f;
     public boolean isJumping = false;
 
+    public enum Type {
+        JOYSTICK,
+        TOUCH,
+        ACCELEROMETER
+    }
+
     public void update(float dt) {}
     public void onStart() {}
     public void onStop() {}

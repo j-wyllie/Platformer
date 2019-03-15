@@ -3,14 +3,23 @@ package com.joshuawyllie.platformer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
+import com.joshuawyllie.platformer.input.Accelerometer;
 import com.joshuawyllie.platformer.input.InputManager;
+import com.joshuawyllie.platformer.input.TouchController;
 import com.joshuawyllie.platformer.input.VirtualJoystick;
 
 public class MainActivity extends AppCompatActivity {
 
-    Game _game;
+    private final InputManager.Type DEFAULT_INPUT_METHOD = InputManager.Type.ACCELEROMETER;
+    private Game _game;
+    private ViewGroup currentControlLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +27,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         _game = findViewById(R.id.game);
         setFullScreen();
-        //InputManager controls = new TouchController(findViewById(R.id.touchControl));
-        InputManager controls = new VirtualJoystick(findViewById(R.id.virtual_joystick));
+        setupControls(DEFAULT_INPUT_METHOD);
+    }
+
+    private void setupControls(InputManager.Type controlType) {
+        FrameLayout activityMain = findViewById(R.id.activity_main);
+        if (currentControlLayout != null) {
+            activityMain.removeView(currentControlLayout);
+        }
+        InputManager controls = null;
+        switch (controlType) {
+            case JOYSTICK:
+                ViewGroup joystickLayout = (LinearLayout) View.inflate(this, R.layout.virtual_joystick, null);
+                activityMain.addView(joystickLayout);
+                currentControlLayout = joystickLayout;
+                controls = new VirtualJoystick(findViewById(R.id.virtual_joystick));
+                break;
+            case TOUCH:
+                RelativeLayout touchLayout = (RelativeLayout) View.inflate(this, R.layout.touch_controls, null);
+                touchLayout.setGravity(Gravity.BOTTOM);
+                activityMain.addView(touchLayout);
+                currentControlLayout = touchLayout;
+                controls = new TouchController(findViewById(R.id.touch_controls));
+                break;
+            case ACCELEROMETER:
+                controls = new Accelerometer(this);
+                break;
+        }
         _game.setControls(controls);
     }
 
