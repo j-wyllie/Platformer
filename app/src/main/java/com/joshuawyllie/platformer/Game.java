@@ -16,6 +16,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
+import com.joshuawyllie.platformer.display.Hud;
+import com.joshuawyllie.platformer.display.SettingsMenu;
+import com.joshuawyllie.platformer.display.Viewport;
 import com.joshuawyllie.platformer.entity.Entity;
 import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.level.LevelData;
@@ -43,6 +46,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private volatile boolean adjustRes = false;
     private int width;
     private int height;
+    private InputManager.Type inputMethod = MainActivity.DEFAULT_INPUT_METHOD;
 
     private SurfaceHolder holder;
     private Paint paint;
@@ -156,6 +160,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         camera.lookAt(level.getPlayer());
         level.update(dt);
         hud.update(dt);
+        controls.update(dt);
         for (Entity entity : level.entities) {
             entity.update(dt);
         }
@@ -316,5 +321,9 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d(TAG, "Surface destroyed");
+    }
+
+    public Hud getHud() {
+        return hud;
     }
 }

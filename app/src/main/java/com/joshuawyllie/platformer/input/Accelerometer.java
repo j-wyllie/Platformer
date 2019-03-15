@@ -108,10 +108,11 @@ public class Accelerometer extends InputManager {
     }
 
     @Override
-    public void update(float dt) {
+    public void update(double dt) {
         horizontalFactor = getHorizontalAxis() / MAX_ANGLE;
         horizontalFactor = Utils.clamp(horizontalFactor, -1.0f, 1.0f);
         verticalFactor = 0.0f;
+        isJumping = isJumping();
     }
 
     @Override

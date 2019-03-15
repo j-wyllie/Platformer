@@ -1,4 +1,4 @@
-package com.joshuawyllie.platformer;
+package com.joshuawyllie.platformer.display;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.View;
+
+import com.joshuawyllie.platformer.Game;
+import com.joshuawyllie.platformer.R;
 
 public class Hud {
 
@@ -20,6 +22,7 @@ public class Hud {
     private Game game = null;
     private Viewport camera = null;
     private Context context = null;
+    private SettingsMenu settingsMenu = null;
     private SharedPreferences _prefs = null;
     private SharedPreferences.Editor _editor = null;
     private Bitmap fullHeart = null;
@@ -43,8 +46,10 @@ public class Hud {
         paint.setTextSize(HUD_SIZE * camera.getPixelsPerMeterX());
         final float centerX = screenWidth / 2f;
         final float centerY = screenHeight / 2f;
-        canvas.drawText("collectibles left: " + collectablesLeft, screenWidth - 50 , 50, paint);
-        canvas.drawText("collectibles collected: " + collectiblesCollected, screenWidth - 50, 100, paint);
+        final float textMarginX = screenWidth - 100;
+        final float textMarginY = 50;
+        canvas.drawText("collectibles left: " + collectablesLeft, textMarginX , textMarginY, paint);
+        canvas.drawText("collectibles collected: " + collectiblesCollected, textMarginX, textMarginY * 2, paint);
         switch (health) {
             case 0:
                 canvas.drawBitmap(emptyHeart, 4, 4, paint);
@@ -80,5 +85,9 @@ public class Hud {
     }
 
     public void gameOver() {
+    }
+
+    public void setSettingsMenu(SettingsMenu settingsMenu) {
+        this.settingsMenu = settingsMenu;
     }
 }

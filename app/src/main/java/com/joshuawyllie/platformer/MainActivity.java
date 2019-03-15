@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.joshuawyllie.platformer.display.SettingsMenu;
 import com.joshuawyllie.platformer.input.Accelerometer;
 import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.input.TouchController;
@@ -17,7 +18,7 @@ import com.joshuawyllie.platformer.input.VirtualJoystick;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final InputManager.Type DEFAULT_INPUT_METHOD = InputManager.Type.ACCELEROMETER;
+    public static final InputManager.Type DEFAULT_INPUT_METHOD = InputManager.Type.ACCELEROMETER;
     private Game _game;
     private ViewGroup currentControlLayout;
 
@@ -28,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
         _game = findViewById(R.id.game);
         setFullScreen();
         setupControls(DEFAULT_INPUT_METHOD);
+        setupSettingMenu();
+    }
+
+    private void setupSettingMenu() {
+        SettingsMenu settingsMenu = new SettingsMenu(findViewById(R.id.settings_button));
+        _game.getHud().setSettingsMenu(settingsMenu);
     }
 
     private void setupControls(InputManager.Type controlType) {

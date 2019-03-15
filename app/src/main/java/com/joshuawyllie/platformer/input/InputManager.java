@@ -11,7 +11,7 @@ public class InputManager {
         ACCELEROMETER
     }
 
-    public void update(float dt) {}
+    public void update(double dt) {}
     public void onStart() {}
     public void onStop() {}
     public void onPause() {}

@@ -1,4 +1,4 @@
-package com.joshuawyllie.platformer;
+package com.joshuawyllie.platformer.display;
 
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.joshuawyllie.platformer.entity.Entity;
 
-class Viewport {
+public class Viewport {
     private final static float BUFFER = 2f; //overdraw, to avoid visual gaps
     private final PointF mLookAt = new PointF(0f, 0f);
     private int mPixelsPerMeterX; //viewport "density"
