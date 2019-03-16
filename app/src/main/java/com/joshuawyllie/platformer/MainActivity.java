@@ -18,14 +18,16 @@ import com.joshuawyllie.platformer.input.VirtualJoystick;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final InputManager.Type DEFAULT_INPUT_METHOD = InputManager.Type.ACCELEROMETER;
+    public static final InputManager.Type DEFAULT_INPUT_METHOD = InputManager.Type.JOYSTICK;
     private Game _game;
     private ViewGroup currentControlLayout;
+    private FrameLayout activityMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        activityMain = findViewById(R.id.activity_main);
         _game = findViewById(R.id.game);
         setFullScreen();
         setupControls(DEFAULT_INPUT_METHOD);
@@ -33,16 +35,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupSettingMenu() {
-        SettingsMenu settingsMenu = new SettingsMenu(findViewById(R.id.settings_button));
+        SettingsMenu settingsMenu = new SettingsMenu(this, activityMain, findViewById(R.id.settings_button));
         _game.getHud().setSettingsMenu(settingsMenu);
     }
 
-    private void setupControls(InputManager.Type controlType) {
-        FrameLayout activityMain = findViewById(R.id.activity_main);
+    public void setupControls(InputManager.Type controlType) {
         if (currentControlLayout != null) {
             activityMain.removeView(currentControlLayout);
+            currentControlLayout = null;
         }
         InputManager controls = null;
+        //_game.setUsingAccelerometer(false);
         switch (controlType) {
             case JOYSTICK:
                 ViewGroup joystickLayout = (LinearLayout) View.inflate(this, R.layout.virtual_joystick, null);
@@ -58,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                 controls = new TouchController(findViewById(R.id.touch_controls));
                 break;
             case ACCELEROMETER:
+              //  _game.setUsingAccelerometer(true);
+                //   _game.setAccelerometer(accelerometer);
                 controls = new Accelerometer(this);
                 break;
         }

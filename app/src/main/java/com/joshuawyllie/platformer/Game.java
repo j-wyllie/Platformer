@@ -17,9 +17,9 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 
 import com.joshuawyllie.platformer.display.Hud;
-import com.joshuawyllie.platformer.display.SettingsMenu;
 import com.joshuawyllie.platformer.display.Viewport;
 import com.joshuawyllie.platformer.entity.Entity;
+import com.joshuawyllie.platformer.input.Accelerometer;
 import com.joshuawyllie.platformer.input.InputManager;
 import com.joshuawyllie.platformer.level.LevelData;
 import com.joshuawyllie.platformer.level.LevelManager;
@@ -46,7 +46,6 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private volatile boolean adjustRes = false;
     private int width;
     private int height;
-    private InputManager.Type inputMethod = MainActivity.DEFAULT_INPUT_METHOD;
 
     private SurfaceHolder holder;
     private Paint paint;
@@ -61,6 +60,8 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private InputManager controls = new InputManager();
     private Hud hud = null;
     private Jukebox jukebox = null;
+    private Accelerometer accelerometer = null;
+    private boolean usingAccelerometer = false;
 
     public Game(Context context) {
         super(context);
@@ -90,6 +91,17 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         this.controls.onPause();
         this.controls.onStop();
         this.controls = controls;
+    }
+
+    public void setAccelerometer(Accelerometer accelerometer) {
+        this.accelerometer.onPause();
+        this.accelerometer.onResume();
+        this.accelerometer = accelerometer;
+        this.controls = accelerometer;
+    }
+
+    public void setUsingAccelerometer(boolean usingAccelerometer) {
+        this.usingAccelerometer = usingAccelerometer;
     }
 
     private void init() {

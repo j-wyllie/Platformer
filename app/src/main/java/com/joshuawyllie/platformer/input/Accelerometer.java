@@ -28,6 +28,8 @@ public class Accelerometer extends InputManager {
     public Accelerometer(MainActivity activity) {
         this.activity = activity;
         mRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        unregisterListeners();
+        registerListeners();
     }
 
     private void registerListeners() {
