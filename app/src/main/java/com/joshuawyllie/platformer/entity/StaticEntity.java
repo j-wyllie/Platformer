@@ -37,6 +37,7 @@ public class StaticEntity extends Entity {
 
     @Override
     public void onSizeChange() {
+        _game.pool.remove(_bitmap);
         loadBitmap(spriteName, 0, 0);
     }
 

@@ -305,11 +305,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     }
 
     private void onSizeChange(int width, int height) {
-        if (isPortrait(getContext())) {
-            camera = new Viewport(height, width, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
-        } else {
-            camera = new Viewport(width, height, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
-        }
+        camera = new Viewport(width, height, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
         camera.setBounds(worldEdges);
         for (Entity entity : level.entities) {
             entity.onSizeChange();
