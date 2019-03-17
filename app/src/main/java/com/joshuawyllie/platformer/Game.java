@@ -36,7 +36,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
     private static final float METERS_TO_SHOW_X = 0f; //set the value you want fixed
     private static final float METERS_TO_SHOW_Y = 16f;  //the other is calculated at runtime!
     public static final double NANOS_TO_SECONDS = 1.0 / 1000000000;
-    private static RectF worldEdges = null;
+    private RectF worldEdges = null;
 
     private static Matrix viewTransform = new Matrix();
     private static final PointF cameraPosition = new PointF();
@@ -333,5 +333,9 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
 
     public Hud getHud() {
         return hud;
+    }
+
+    public RectF getWorldEdges() {
+        return worldEdges;
     }
 }

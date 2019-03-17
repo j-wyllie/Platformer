@@ -52,6 +52,9 @@ public class Player extends DynamicEntity  {
             _velY = PLAYER_JUMP_VELOCITY;
             isOnGround = false;
         }
+        if (_y > _game.getWorldEdges().bottom) {
+            _game.onGameEvent(new GameEvent(GameEvent.Type.DEATH));
+        }
         updateFacingDirection(direction);
         updateHealth(dt);
         super.update(dt);

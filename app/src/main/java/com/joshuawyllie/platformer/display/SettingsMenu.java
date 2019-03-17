@@ -13,6 +13,7 @@ import com.joshuawyllie.platformer.input.InputManager;
 public class SettingsMenu implements View.OnTouchListener {
     private InputManager.Type inputMethod = MainActivity.DEFAULT_INPUT_METHOD;
     View menuLayout;
+    View settingsButton;
     private MainActivity context;
     private ViewGroup mainActivity;
     private boolean isOpen = false;
@@ -21,7 +22,9 @@ public class SettingsMenu implements View.OnTouchListener {
     public SettingsMenu(MainActivity context, ViewGroup mainActivity, View settingsButton) {
         this.context = context;
         this.mainActivity = mainActivity;
+        this.settingsButton = settingsButton;
         settingsButton.setOnTouchListener(this);
+        settingsButton.bringToFront();
         menuLayout = View.inflate(context, R.layout.menu, null);
         mainActivity.addView(menuLayout);
         menuLayout.setActivated(false);
@@ -49,7 +52,6 @@ public class SettingsMenu implements View.OnTouchListener {
                 Log.d("setting button", String.valueOf(isOpen));
             }
         }
-
         return false;
     }
 
@@ -73,6 +75,7 @@ public class SettingsMenu implements View.OnTouchListener {
         this.inputMethod = inputMethod;
         context.setupControls(inputMethod);
         menuLayout.bringToFront();
+        settingsButton.bringToFront();
     }
 
     private class InputMethodListener implements RadioGroup.OnCheckedChangeListener {

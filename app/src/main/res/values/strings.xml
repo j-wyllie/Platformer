@@ -25,4 +25,7 @@
     <string name="coin_sound">sfx/pickup_coin.wav</string>
     <string name="hit">sfx/hit_hurt.wav</string>
     <string name="jump_sound">sfx/jump.wav</string>
+    <string name="joystick_radio_button">Joystick</string>
+    <string name="touch_controls_radio_button">Buttons</string>
+    <string name="accelerometer_radio_button">Accelerometer</string>
 </resources>
