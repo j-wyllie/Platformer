@@ -36,7 +36,7 @@ public class Player extends DynamicEntity  {
     public void render(Canvas canvas, Paint paint, Matrix viewTransform) {
         viewTransform.preScale(facing, 1f);
         if (facing == LEFT) {
-            final float offsetX = _game.worldToScreenX(_width);
+            final float offsetX = game.worldToScreenX(_width);
             viewTransform.postTranslate(offsetX, 0f);
         }
         super.render(canvas, paint, viewTransform);
@@ -44,16 +44,16 @@ public class Player extends DynamicEntity  {
 
     @Override
     public void update(final double dt) {
-        final InputManager controls = _game.getControls();
+        final InputManager controls = game.getControls();
         final float direction = controls.horizontalFactor;
-        _velX = -direction * PLAYER_RUN_SPEED;
+        velX = -direction * PLAYER_RUN_SPEED;
         if (controls.isJumping && isOnGround) {
-            _game.onGameEvent(new GameEvent(GameEvent.Type.JUMP));
-            _velY = PLAYER_JUMP_VELOCITY;
+            game.onGameEvent(new GameEvent(GameEvent.Type.JUMP));
+            velY = PLAYER_JUMP_VELOCITY;
             isOnGround = false;
         }
-        if (_y > _game.getWorldEdges().bottom) {
-            _game.onGameEvent(new GameEvent(GameEvent.Type.DEATH));
+        if (_y > game.getWorldEdges().bottom) {
+            game.onGameEvent(new GameEvent(GameEvent.Type.DEATH));
         }
         updateFacingDirection(direction);
         updateHealth(dt);
@@ -77,7 +77,7 @@ public class Player extends DynamicEntity  {
             }
         }
         if (health == 0) {
-            _game.onGameEvent(new GameEvent(GameEvent.Type.DEATH));
+            game.onGameEvent(new GameEvent(GameEvent.Type.DEATH));
         }
     }
 
@@ -104,7 +104,7 @@ public class Player extends DynamicEntity  {
 
     private void damageTaken() {
         if (!recoveryMode) {
-            _game.onGameEvent(new GameEvent(GameEvent.Type.DAMAGE));
+            game.onGameEvent(new GameEvent(GameEvent.Type.DAMAGE));
             health--;
             recoveryMode = true;
         }

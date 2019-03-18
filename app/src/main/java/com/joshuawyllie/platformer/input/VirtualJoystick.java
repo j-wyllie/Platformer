@@ -9,7 +9,8 @@ import com.joshuawyllie.platformer.util.Utils;
 
 public class VirtualJoystick extends InputManager {
 
-    private static String TAG = "Virtual Joystick";
+    private static final String TAG = "Virtual Joystick";
+    private static final int MIN_HIT_TARGET = 48;
 
     private int maxDistance;
 
@@ -18,7 +19,7 @@ public class VirtualJoystick extends InputManager {
                 .setOnTouchListener(new JoystickTouchListener());
         view.findViewById(R.id.button_region)
                 .setOnTouchListener(new ActionButtonTouchListener());
-        maxDistance = Utils.dpToPx(48 * 2); //48dp = minimum hit target. maxDistance is in pixels.
+        maxDistance = Utils.dpToPx(MIN_HIT_TARGET * 2); //48dp = minimum hit target. maxDistance is in pixels.
         Log.d(TAG, "MaxDistance (pixels): " + maxDistance);
     }
 

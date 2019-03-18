@@ -11,7 +11,7 @@ public abstract class Entity {
 
     static final String TAG = "Entity";
     private static final float DEFAULT_DIMENSIONS = 1f;
-    static Game _game = null; //shared ref, managed by the Game-class!
+    static Game game = null; //shared ref, managed by the Game-class!
     float _x = 0;
     float _y = 0;
     float _width = DEFAULT_DIMENSIONS;
@@ -114,7 +114,7 @@ public abstract class Entity {
     }
 
     public static void setGame(Game game) {
-        _game = game;
+        Entity.game = game;
     }
 
     public String getSpriteName() { return spriteName; }

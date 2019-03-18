@@ -1,6 +1,5 @@
 package com.joshuawyllie.platformer.entity;
 
-import com.joshuawyllie.platformer.util.Random;
 import com.joshuawyllie.platformer.util.Utils;
 
 public class DynamicEntity extends StaticEntity {
@@ -10,12 +9,12 @@ public class DynamicEntity extends StaticEntity {
 
     float init_x;
     float init_y;
-    float _velX = 0;
-    float _velY = 0;
+    float velX = 0;
+    float velY = 0;
     float gravity = GRAVITY;
     boolean isOnGround = false;
 
-    public DynamicEntity(String spriteName, int xPos, int yPos) {
+    public DynamicEntity(String spriteName, float xPos, float yPos) {
         super(spriteName, xPos, yPos);
         init(xPos, yPos);
     }
@@ -32,14 +31,14 @@ public class DynamicEntity extends StaticEntity {
 
     @Override
     public void update(double dt) {
-        _x += Utils.clamp((float) (_velX * dt), -MAX_DELTA, MAX_DELTA);
+        _x += Utils.clamp((float) (velX * dt), -MAX_DELTA, MAX_DELTA);
         if (!isOnGround) {
-            _velY += gravity * dt;
+            velY += gravity * dt;
         }
-        _y += Utils.clamp((float) (_velY * dt), -MAX_DELTA, MAX_DELTA);
-        if (_y > _game.getHeight()) {
-            _y = Random.between(-4f, 0f);
-        }
+        _y += Utils.clamp((float) (velY * dt), -MAX_DELTA, MAX_DELTA);
+//        if (_y > game.getHeight()) {
+//            _y = Random.between(-4f, 0f);
+//        }
         isOnGround = false;
     }
 
@@ -52,9 +51,9 @@ public class DynamicEntity extends StaticEntity {
         _x += Entity.overlap.x;
         _y += Entity.overlap.y;
         if (Entity.overlap.y != 0f) {
-            _velY = 0;
+            velY = 0;
             if (Entity.overlap.y < 0f) {
-                _velY = 0;
+                velY = 0;
                 isOnGround = true;
             }
         }

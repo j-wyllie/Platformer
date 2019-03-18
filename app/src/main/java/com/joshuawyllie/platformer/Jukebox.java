@@ -21,6 +21,7 @@ public class Jukebox {
     private static final float DEFAULT_MUSIC_VOLUME = 0.5f;
     private static final String SOUNDS_PREF_KEY = "sounds_pref_key";
     private static final String MUSIC_PREF_KEY = "music_pref_key";
+
     private boolean mSoundEnabled;
     private boolean mMusicEnabled;
     private Context context;
@@ -100,7 +101,7 @@ public class Jukebox {
         try {
             mBgPlayer = new MediaPlayer();
             AssetFileDescriptor afd = context
-                    .getAssets().openFd("sfx/music.wav");
+                    .getAssets().openFd(context.getString(R.string.music_file));
             mBgPlayer.setDataSource(
                     afd.getFileDescriptor(),
                     afd.getStartOffset(),

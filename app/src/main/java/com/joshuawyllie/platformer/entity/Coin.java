@@ -1,18 +1,15 @@
 package com.joshuawyllie.platformer.entity;
 
-import com.joshuawyllie.platformer.Game;
 import com.joshuawyllie.platformer.GameEvent;
 import com.joshuawyllie.platformer.level.LevelOne;
-
-import java.sql.SQLClientInfoException;
 
 public class Coin extends StaticEntity {
     private static final float WIDTH = 0.5f;
     private static final float HEIGHT = 0.5f;
     private static final float FLOATING_HEIGHT = 0.25f;
     private static final float SWAY_DISTANCE = 0.5f;
-    private float init_x = 0;
-    private float init_y = 0;
+    private float init_x;
+    private float init_y;
 
     public Coin(String spriteName, float xPos, float yPos) {
         super(spriteName, xPos + FLOATING_HEIGHT, yPos + FLOATING_HEIGHT, WIDTH, HEIGHT);
@@ -24,11 +21,11 @@ public class Coin extends StaticEntity {
     @Override
     public void onCollision(final Entity that) {
         if (that.getSpriteName().equals(LevelOne.PLAYER)) {
-            _game.onGameEvent(new GameEvent(GameEvent.Type.COIN_COLLISON, this));
+            game.onGameEvent(new GameEvent(GameEvent.Type.COIN_COLLISON, this));
         }
     }
 
-    int direction = 1;
+    private int direction = 1;
     @Override
     public void update(final double dt) {
         if (_y < init_y - SWAY_DISTANCE / 2) {

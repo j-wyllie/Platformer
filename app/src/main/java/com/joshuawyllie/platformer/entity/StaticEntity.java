@@ -5,11 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 
-import com.joshuawyllie.platformer.util.BitmapUtils;
-
 public class StaticEntity extends Entity {
 
-    protected Bitmap _bitmap = null;
+    private Bitmap _bitmap = null;
 
     public StaticEntity(final String spriteName, final float xPos, final float yPos) {
         init(spriteName, xPos, yPos);
@@ -25,19 +23,19 @@ public class StaticEntity extends Entity {
         this.spriteName = spriteName;
         _x = xPos;
         _y = yPos;
-        loadBitmap(spriteName, 120, 120);
+        loadBitmap(spriteName, (int) xPos, (int) yPos);
     }
 
     protected void loadBitmap(final String spriteName, final int xPos, final int yPos) {
         destroy();
-        final int widthPixels = _game.worldToScreenX(_width);
-        final int heightPixels = _game.worldToScreenY(_height);
-        _bitmap = _game.pool.createBitmap(spriteName, _width, _height);
+        final int widthPixels = game.worldToScreenX(_width);
+        final int heightPixels = game.worldToScreenY(_height);
+        _bitmap = game.pool.createBitmap(spriteName, _width, _height);
     }
 
     @Override
     public void onSizeChange() {
-        _game.pool.remove(_bitmap);
+        game.pool.remove(_bitmap);
         loadBitmap(spriteName, 0, 0);
     }
 

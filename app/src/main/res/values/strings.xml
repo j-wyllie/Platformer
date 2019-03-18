@@ -28,4 +28,7 @@
     <string name="joystick_radio_button">Joystick</string>
     <string name="touch_controls_radio_button">Buttons</string>
     <string name="accelerometer_radio_button">Accelerometer</string>
+    <string name="collectables_left">collectibles left: %d</string>
+    <string name="collectibles_collected">collectibles collected: %d</string>
+    <string name="music_file">sfx/music.wav</string>
 </resources>

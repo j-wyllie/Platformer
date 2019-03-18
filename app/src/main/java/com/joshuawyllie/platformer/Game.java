@@ -110,7 +110,7 @@ public class Game extends SurfaceView implements Runnable, SurfaceHolder.Callbac
         holder.addCallback(this);
         holder.setFixedSize(STAGE_WIDTH, STAGE_HEIGHT);
         paint = new Paint();
-        camera = new Viewport(1280, 720, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
+        camera = new Viewport(STAGE_WIDTH, STAGE_HEIGHT, METERS_TO_SHOW_X, METERS_TO_SHOW_Y);
         pool = new BitmapPool(this);
         currentLevel = new LevelOne(getContext());
         level = new LevelManager(currentLevel, pool);

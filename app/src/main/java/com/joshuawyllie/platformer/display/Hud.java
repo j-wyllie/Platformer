@@ -9,22 +9,20 @@ import android.graphics.Paint;
 
 import com.joshuawyllie.platformer.Game;
 import com.joshuawyllie.platformer.R;
+import com.joshuawyllie.platformer.level.LevelData;
 
 public class Hud {
 
     private static final float HUD_SIZE = 1f;
-    private static final float HUD_MARGIN = 1f;
     private static final float HEART_SPACE = 55f;
-    private static final float TEXT_X = 5f;
     private static final String PREFS = "com.joshuawyllie.platformer";
-    private static final String LONGEST_DIST = "longest_distance";
 
-    private Game game = null;
-    private Viewport camera = null;
-    private Context context = null;
+    private Game game;
+    private Viewport camera;
+    private Context context;
     private SettingsMenu settingsMenu = null;
-    private SharedPreferences _prefs = null;
-    private SharedPreferences.Editor _editor = null;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
     private Bitmap fullHeart = null;
     private Bitmap emptyHeart = null;
     private int screenWidth = Game.STAGE_WIDTH;
@@ -34,10 +32,10 @@ public class Hud {
         this.game = game;
         this.camera = camera;
         context = game.getContext();
-        _prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        _editor = _prefs.edit();
-        fullHeart = game.pool.createBitmap("lifeheart_full", HUD_SIZE, HUD_SIZE);
-        emptyHeart = game.pool.createBitmap("lifeheart_empty", HUD_SIZE, HUD_SIZE);
+        prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        editor = prefs.edit();
+        fullHeart = game.pool.createBitmap(LevelData.HEART_FULL, HUD_SIZE, HUD_SIZE);
+        emptyHeart = game.pool.createBitmap(LevelData.HEART_EMPTY, HUD_SIZE, HUD_SIZE);
     }
 
     public void render(final Canvas canvas, final Paint paint, int health, int collectablesLeft, int collectiblesCollected) {
@@ -48,8 +46,8 @@ public class Hud {
         final float centerY = screenHeight / 2f;
         final float textMarginX = screenWidth - 100;
         final float textMarginY = 50;
-        canvas.drawText("collectibles left: " + collectablesLeft, textMarginX , textMarginY, paint);
-        canvas.drawText("collectibles collected: " + collectiblesCollected, textMarginX, textMarginY * 2, paint);
+        canvas.drawText(String.format(context.getString(R.string.collectables_left), collectablesLeft), textMarginX , textMarginY, paint);
+        canvas.drawText(String.format(context.getString(R.string.collectibles_collected), collectiblesCollected), textMarginX, textMarginY * 2, paint);
         switch (health) {
             case 0:
                 canvas.drawBitmap(emptyHeart, 4, 4, paint);

@@ -10,15 +10,17 @@ import java.util.Objects;
 
 public class BitmapPool {
     private static final String TAG = "BitmapPool";
-    private final HashMap<String, Bitmap> _bitmaps = new HashMap<>();
-    private Bitmap _nullsprite = null;
-    private Game _game;
+    private static final float NULL_SPRITE_WIDTH = 0.5f;
+    private static final float NULL_SPRITE_HEIGHT = 0.5f;
+    private final HashMap<String, Bitmap> bitmaps = new HashMap<>();
+    private Bitmap nullsprite;
+    private Game game;
 
     public BitmapPool(final Game game) {
         Objects.requireNonNull(game, "BitmapPool requires a valid Game instance");
-        _game = game;
-        _nullsprite = createBitmap("null_sprite", 0.5f, 0.5f); //the nullsprite, in case loading fails later
-        Objects.requireNonNull(_nullsprite, "BitmapPool: unable to create nullsprite!");
+        this.game = game;
+        nullsprite = createBitmap("null_sprite", NULL_SPRITE_WIDTH, NULL_SPRITE_HEIGHT); //the nullsprite, in case loading fails later
+        Objects.requireNonNull(nullsprite, "BitmapPool: unable to create nullsprite!");
     }
 
     public Bitmap createBitmap(final String sprite, float widthMeters, float heightMeters) {
@@ -28,21 +30,21 @@ public class BitmapPool {
             return bmp;
         }
         try {
-            bmp = BitmapUtils.loadScaledBitmap(_game.getContext(), sprite, (int) _game.worldToScreenX(widthMeters), (int) _game.worldToScreenY(heightMeters));
+            bmp = BitmapUtils.loadScaledBitmap(game.getContext(), sprite, (int) game.worldToScreenX(widthMeters), (int) game.worldToScreenY(heightMeters));
             put(key, bmp);
         } catch (final OutOfMemoryError e) {
             //this is very very bad! Ideally you have some reference counted assets and can start unloading as needed
             Log.w(TAG, "Out of Memory!", e);
         } finally {
             if (bmp == null) {
-                bmp = _nullsprite;
+                bmp = nullsprite;
             }
         }
         return bmp;
     }
 
     public int size() {
-        return _bitmaps.size();
+        return bitmaps.size();
     }
 
     public String makeKey(final String name, final float widthMeters, final float heightMeters) {
@@ -50,27 +52,27 @@ public class BitmapPool {
     }
 
     public void put(final String key, final Bitmap bmp) {
-        if (_bitmaps.containsKey(key)) {
+        if (bitmaps.containsKey(key)) {
             return;
         }
-        _bitmaps.put(key, bmp);
+        bitmaps.put(key, bmp);
     }
 
     public boolean contains(final String key) {
-        return _bitmaps.containsKey(key);
+        return bitmaps.containsKey(key);
     }
 
     public boolean contains(final Bitmap bmp) {
-        return _bitmaps.containsValue(bmp);
+        return bitmaps.containsValue(bmp);
     }
 
     public Bitmap getBitmap(final String key) {
-        return _bitmaps.get(key);
+        return bitmaps.get(key);
     }
 
     private String getKey(final Bitmap bmp) {
         if (bmp != null) {
-            for (HashMap.Entry<String, Bitmap> entry : _bitmaps.entrySet()) {
+            for (HashMap.Entry<String, Bitmap> entry : bitmaps.entrySet()) {
                 if (bmp == entry.getValue()) {
                     return entry.getKey();
                 }
@@ -80,9 +82,9 @@ public class BitmapPool {
     }
 
     private void remove(final String key) {
-        Bitmap tmp = _bitmaps.get(key);
+        Bitmap tmp = bitmaps.get(key);
         if (tmp != null) {
-            _bitmaps.remove(key);
+            bitmaps.remove(key);
             tmp.recycle();
         }
     }
@@ -95,12 +97,12 @@ public class BitmapPool {
     }
 
     public void empty() {
-        for (final HashMap.Entry<String, Bitmap> entry : _bitmaps.entrySet()) {
-            if (entry.getValue() != _nullsprite) {
+        for (final HashMap.Entry<String, Bitmap> entry : bitmaps.entrySet()) {
+            if (entry.getValue() != nullsprite) {
                 entry.getValue().recycle();
             }
         }
-        _bitmaps.clear();
+        bitmaps.clear();
     }
 }
 
